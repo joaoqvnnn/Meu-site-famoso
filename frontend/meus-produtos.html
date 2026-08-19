@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Meus Produtos | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 20px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --bg-field-hover: #222222;
+            --border-field: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-placeholder: #666666;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error-bg: rgba(239, 68, 68, 0.1);
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --rating-color: #f59e0b;
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --bg-field-hover: #eeeeee;
+            --border-field: #e4e4e4;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-placeholder: #9ca3af;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --success-color: #059669;
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+            --success-bg: rgba(5, 150, 105, 0.08);
+            --error-bg: rgba(220, 38, 38, 0.06);
+            --warning-bg: rgba(217, 119, 6, 0.08);
+            --rating-color: #d97706;
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --bg-field-hover: #eeeeee;
+                --border-field: #e4e4e4;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-placeholder: #9ca3af;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+                --success-color: #059669;
+                --error-color: #dc2626;
+                --warning-color: #d97706;
+                --success-bg: rgba(5, 150, 105, 0.08);
+                --error-bg: rgba(220, 38, 38, 0.06);
+                --warning-bg: rgba(217, 119, 6, 0.08);
+                --rating-color: #d97706;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --bg-field-hover: #222222;
+                --border-field: #2a2a2a;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-placeholder: #666666;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+                --success-color: #10b981;
+                --error-color: #ef4444;
+                --warning-color: #f59e0b;
+                --success-bg: rgba(16, 185, 129, 0.1);
+                --error-bg: rgba(239, 68, 68, 0.1);
+                --warning-bg: rgba(245, 158, 11, 0.1);
+                --rating-color: #f59e0b;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-field);
+            border-radius: 4px;
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-mix);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-back:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 0.3rem;
+            background: var(--bg-field);
+            border-radius: 25px;
+            padding: 0.3rem;
+            border: 1px solid var(--border-mix);
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        /* ========== CONTEÚDO ========== */
+        .products-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* ========== FILTROS ========== */
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            letter-spacing: 0.2px;
+        }
+
+        .filter-chip:hover {
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        .filter-chip.active {
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border-color: var(--bg-btn);
+            font-weight: 600;
+        }
+
+        /* ========== GRID DE PRODUTOS ========== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            transition: all 0.35s ease;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+            border-color: var(--text-secondary);
+        }
+
+        .product-card.removing {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .product-poster {
+            width: 60px;
+            height: 80px;
+            background: var(--bg-field);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .product-header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+        }
+
+        .product-type {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .product-status {
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            width: fit-content;
+        }
+
+        .product-status.ativo {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .product-status.expirado {
+            background: var(--error-bg);
+            color: var(--error-color);
+        }
+
+        .product-status.pendente {
+            background: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .product-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-info-label {
+            color: var(--text-secondary);
+        }
+
+        .product-info-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--rating-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 10px;
+            padding: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+        }
+
+        .btn-action.play {
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border-color: var(--bg-btn);
+        }
+
+        .btn-action.play:hover {
+            background: var(--bg-btn-hover);
+            border-color: var(--bg-btn-hover);
+        }
+
+        .btn-action.remove {
+            color: var(--error-color);
+            border-color: var(--border-mix);
+        }
+
+        .btn-action.remove:hover {
+            background: var(--error-bg);
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        /* ========== VAZIO ========== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-browse {
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 0.9rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-browse:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .products-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.4rem;
+            }
+
+            .filter-chip {
+                padding: 0.4rem 1rem;
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">▶</div>
+                <span class="logo-text">StreamPremium</span>
+            </a>
+
+            <div class="header-actions">
+                <a href="catalogo.html" class="btn-back">← Catálogo</a>
+
+                <div class="theme-selector">
+                    <button class="theme-option" data-theme-option="dark" type="button">🌙</button>
+                    <button class="theme-option" data-theme-option="light" type="button">☀️</button>
+                    <button class="theme-option active" data-theme-option="system" type="button">💻</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO -->
+    <main class="products-container">
+        <h1 class="page-title">Meus produtos</h1>
+        <p class="page-subtitle">Gerencie seus títulos adquiridos</p>
+
+        <!-- FILTROS -->
+        <div class="filters" id="filters">
+            <button class="filter-chip active" data-filter="todos">Todos</button>
+            <button class="filter-chip" data-filter="ativo">Ativos</button>
+            <button class="filter-chip" data-filter="pendente">Pendentes</button>
+            <button class="filter-chip" data-filter="expirado">Expirados</button>
+        </div>
+
+        <!-- GRID DE PRODUTOS -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Gerado dinamicamente -->
+        </div>
+
+        <!-- ESTADO VAZIO -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">🎬</div>
+            <h2 class="empty-title">Nenhum produto encontrado</h2>
+            <p class="empty-text">Você ainda não possui produtos nesta categoria</p>
+            <a href="catalogo.html" class="btn-browse">🎬 Explorar catálogo</a>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== DADOS SIMULADOS ==========
+            let produtos = [
+                { 
+                    id: 1, 
+                    titulo: 'Duna: Parte 2', 
+                    tipo: 'Filme', 
+                    status: 'ativo', 
+                    dataCompra: '15/12/2024', 
+                    expiraEm: '15/03/2025', 
+                    avaliacao: 8.9,
+                    preco: 29.90
+                },
+                { 
+                    id: 2, 
+                    titulo: 'Breaking Bad - Temporada 1', 
+                    tipo: 'Série', 
+                    status: 'ativo', 
+                    dataCompra: '10/12/2024', 
+                    expiraEm: '10/03/2025', 
+                    avaliacao: 9.5,
+                    preco: 49.90
+                },
+                { 
+                    id: 3, 
+                    titulo: 'Interestelar', 
+                    tipo: 'Filme', 
+                    status: 'ativo', 
+                    dataCompra: '05/12/2024', 
+                    expiraEm: '05/03/2025', 
+                    avaliacao: 8.7,
+                    preco: 19.90
+                },
+                { 
+                    id: 4, 
+                    titulo: 'Stranger Things - T1', 
+                    tipo: 'Série', 
+                    status: 'pendente', 
+                    dataCompra: '01/12/2024', 
+                    expiraEm: '—', 
+                    avaliacao: 8.7,
+                    preco: 39.90
+                },
+                { 
+                    id: 5, 
+                    titulo: 'A Origem', 
+                    tipo: 'Filme', 
+                    status: 'expirado', 
+                    dataCompra: '01/09/2024', 
+                    expiraEm: '01/12/2024', 
+                    avaliacao: 8.8,
+                    preco: 24.90
+                },
+                { 
+                    id: 6, 
+                    titulo: 'Planeta Terra II', 
+                    tipo: 'Documentário', 
+                    status: 'ativo', 
+                    dataCompra: '20/11/2024', 
+                    expiraEm: '20/02/2025', 
+                    avaliacao: 9.5,
+                    preco: 34.90
+                },
+            ];
+
+            let filtroAtual = 'todos';
+
+            // ========== ELEMENTOS ==========
+            const productsGrid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const filterChips = document.querySelectorAll('.filter-chip');
+
+            // ========== FORMATAR PREÇO ==========
+            function formatarPreco(valor) {
+                return 'R$ ' + valor.toFixed(2).replace('.', ',');
+            }
+
+            // ========== RENDERIZAR PRODUTOS ==========
+            function renderizarProdutos() {
+                let produtosFiltrados = produtos;
+                
+                if (filtroAtual !== 'todos') {
+                    produtosFiltrados = produtos.filter(p => p.status === filtroAtual);
+                }
+
+                productsGrid.innerHTML = '';
+
+                if (produtosFiltrados.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+
+                produtosFiltrados.forEach((produto, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.style.animationDelay = (index * 0.08) + 's';
+
+                    const statusLabel = produto.status.charAt(0).toUpperCase() + produto.status.slice(1);
+                    const statusIcon = produto.status === 'ativo' ? '✓' : produto.status === 'pendente' ? '⏳' : '✗';
+
+                    card.innerHTML = `
+                        <div class="product-header">
+                            <div class="product-poster">🎬</div>
+                            <div class="product-header-info">
+                                <h3 class="product-title">${produto.titulo}</h3>
+                                <p class="product-type">${produto.tipo}</p>
+                            </div>
+                            <span class="product-status ${produto.status}">
+                                ${statusIcon} ${statusLabel}
+                            </span>
+                        </div>
+
+                        <div class="product-info">
+                            <div class="product-info-row">
+                                <span class="product-info-label">Data da compra:</span>
+                                <span class="product-info-value">${produto.dataCompra}</span>
+                            </div>
+                            <div class="product-info-row">
+                                <span class="product-info-label">Expira em:</span>
+                                <span class="product-info-value">${produto.expiraEm}</span>
+                            </div>
+                            <div class="product-info-row">
+                                <span class="product-info-label">Valor pago:</span>
+                                <span class="product-info-value">${formatarPreco(produto.preco)}</span>
+                            </div>
+                            <div class="product-info-row">
+                                <span class="product-info-label">Avaliação:</span>
+                                <span class="product-rating">★ ${produto.avaliacao}</span>
+                            </div>
+                        </div>
+
+                        <div class="product-actions">
+                            <button class="btn-action play" data-id="${produto.id}">
+                                ▶ Assistir
+                            </button>
+                            <button class="btn-action remove" data-id="${produto.id}">
+                                🗑 Remover
+                            </button>
+                        </div>
+                    `;
+
+                    productsGrid.appendChild(card);
+                });
+
+                // Eventos dos botões
+                document.querySelectorAll('.btn-action.play').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const produto = produtos.find(p => p.id === id);
+                        if (produto) {
+                            alert('Reproduzindo: ' + produto.titulo);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.btn-action.remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const card = this.closest('.product-card');
+                        card.classList.add('removing');
+                        
+                        setTimeout(() => {
+                            produtos = produtos.filter(p => p.id !== id);
+                            renderizarProdutos();
+                        }, 300);
+                    });
+                });
+            }
+
+            // ========== EVENTOS DE FILTRO ==========
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    filtroAtual = this.getAttribute('data-filter');
+                    renderizarProdutos();
+                });
+            });
+
+            // ========== INICIALIZAR ==========
+            renderizarProdutos();
+        })();
+    </script>
+</body>
+</html>
