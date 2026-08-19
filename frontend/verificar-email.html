@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Verificar E-mail | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 28px;
+            --radius-field: 14px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --bg-field-hover: #222222;
+            --border-field: #2a2a2a;
+            --border-field-focus: #ffffff;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-placeholder: #666666;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
+            --error-bg: rgba(239, 68, 68, 0.08);
+            --warning-bg: rgba(245, 158, 11, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.08);
+            --code-bg: #1a1a1a;
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --bg-field-hover: #eeeeee;
+            --border-field: #e4e4e4;
+            --border-field-focus: #171717;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-placeholder: #9ca3af;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+            --success-color: #059669;
+            --error-bg: rgba(220, 38, 38, 0.04);
+            --warning-bg: rgba(217, 119, 6, 0.04);
+            --success-bg: rgba(5, 150, 105, 0.04);
+            --code-bg: #f5f5f5;
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --bg-field-hover: #eeeeee;
+                --border-field: #e4e4e4;
+                --border-field-focus: #171717;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-placeholder: #9ca3af;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+                --error-color: #dc2626;
+                --warning-color: #d97706;
+                --success-color: #059669;
+                --error-bg: rgba(220, 38, 38, 0.04);
+                --warning-bg: rgba(217, 119, 6, 0.04);
+                --success-bg: rgba(5, 150, 105, 0.04);
+                --code-bg: #f5f5f5;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --bg-field-hover: #222222;
+                --border-field: #2a2a2a;
+                --border-field-focus: #ffffff;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-placeholder: #666666;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+                --error-color: #ef4444;
+                --warning-color: #f59e0b;
+                --success-color: #10b981;
+                --error-bg: rgba(239, 68, 68, 0.08);
+                --warning-bg: rgba(245, 158, 11, 0.08);
+                --success-bg: rgba(16, 185, 129, 0.08);
+                --code-bg: #1a1a1a;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 0.4rem;
+            border: 1px solid var(--border-mix);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0, 0, 1) 0.1s forwards;
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            letter-spacing: 0.2px;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        .theme-icon {
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 2.5rem 2rem;
+            border: 1px solid var(--border-mix);
+            transition: background-color 0.35s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) 0.2s forwards;
+        }
+
+        .brand-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        .logo-mark {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.1rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--bg-card);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .icon-verification {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            border: 2px solid var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .form-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            line-height: 1.2;
+        }
+
+        .form-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .email-destaque {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-field);
+            border-radius: 8px;
+            padding: 0.2rem 0.6rem;
+        }
+
+        .code-inputs {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-input {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-sans);
+            background-color: var(--code-bg);
+            border: 2px solid var(--border-field);
+            border-radius: 12px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .code-input:focus {
+            border-color: var(--border-field-focus);
+            box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.08);
+        }
+
+        .code-input.input-error {
+            border-color: var(--error-color);
+            background-color: var(--error-bg);
+            animation: shake 0.4s ease;
+        }
+
+        .code-input.input-success {
+            border-color: var(--success-color);
+            background-color: var(--success-bg);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .error-message {
+            font-size: 0.76rem;
+            margin-top: 0.5rem;
+            font-weight: 450;
+            min-height: 1.1rem;
+            letter-spacing: 0.2px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message.error {
+            color: var(--error-color);
+        }
+
+        .error-message.success {
+            color: var(--success-color);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-right-color: currentColor;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-btn);
+            padding: 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .timer-text {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 1.2rem;
+            letter-spacing: 0.2px;
+        }
+
+        .timer-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .login-link a {
+            color: var(--text-link);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.2px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .login-link a:hover {
+            border-bottom-color: var(--text-link);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 24px;
+            }
+            .form-title {
+                font-size: 1.6rem;
+            }
+            .brand-area {
+                margin-bottom: 1.4rem;
+            }
+            .code-input {
+                width: 42px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            .code-inputs {
+                gap: 0.4rem;
+            }
+            .theme-option {
+                padding: 0.35rem 0.8rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <div class="auth-wrapper">
+        <!-- Seletor de tema -->
+        <div class="theme-selector" role="group" aria-label="Seletor de tema">
+            <button class="theme-option" data-theme-option="dark" type="button">
+                <span class="theme-icon">🌙</span> Preto
+            </button>
+            <button class="theme-option" data-theme-option="light" type="button">
+                <span class="theme-icon">☀️</span> Branco
+            </button>
+            <button class="theme-option active" data-theme-option="system" type="button">
+                <span class="theme-icon">💻</span> Sistema
+            </button>
+        </div>
+
+        <!-- Card -->
+        <div class="card">
+            <!-- Marca -->
+            <div class="brand-area">
+                <div class="logo-mark" aria-hidden="true">▶</div>
+                <span class="brand-name">STREAMPREMIUM</span>
+            </div>
+
+            <!-- Ícone de verificação -->
+            <div class="icon-verification" aria-hidden="true">✉️</div>
+
+            <!-- Título -->
+            <h1 class="form-title">Verifique seu e-mail</h1>
+            <p class="form-subtitle">
+                Enviamos um código de verificação para<br>
+                <span class="email-destaque" id="emailExibido">seu@email.com</span>
+            </p>
+
+            <!-- Formulário de código -->
+            <form id="verificationForm" novalidate autocomplete="off">
+                <div class="code-inputs" id="codeInputs">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                </div>
+                <div class="error-message" id="codeFeedback"></div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Verificar código</span>
+                </button>
+
+                <button type="button" class="btn-secondary" id="resendBtn">
+                    📧 Reenviar código
+                </button>
+            </form>
+
+            <p class="timer-text" id="timerText">
+                Reenvio disponível em <strong>30s</strong>
+            </p>
+
+            <div class="login-link">
+                Já verificou? <a href="login.html">Fazer login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== ELEMENTOS ==========
+            const codeInputs = document.querySelectorAll('.code-input');
+            const codeFeedback = document.getElementById('codeFeedback');
+            const submitBtn = document.getElementById('submitBtn');
+            const resendBtn = document.getElementById('resendBtn');
+            const timerText = document.getElementById('timerText');
+            const emailExibido = document.getElementById('emailExibido');
+
+            // ========== SIMULAÇÃO DE E-MAIL ==========
+            // Tenta pegar e-mail do localStorage (se veio do cadastro)
+            const emailSalvo = localStorage.getItem('streampremium_pending_email');
+            if (emailSalvo) {
+                emailExibido.textContent = emailSalvo;
+            }
+
+            // ========== NAVEGAÇÃO ENTRE INPUTS ==========
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    // Remove caracteres não numéricos
+                    this.value = this.value.replace(/\D/g, '');
+                    
+                    if (this.value.length === 1 && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                    
+                    // Limpar feedback
+                    codeFeedback.textContent = '';
+                    codeFeedback.className = 'error-message';
+                    this.classList.remove('input-error', 'input-success');
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                    
+                    if (pastedData.length > 0) {
+                        pastedData.split('').forEach((char, i) => {
+                            if (i < codeInputs.length) {
+                                codeInputs[i].value = char;
+                            }
+                        });
+                        
+                        // Focar no próximo campo vazio
+                        const nextIndex = Math.min(pastedData.length, codeInputs.length - 1);
+                        codeInputs[nextIndex].focus();
+                    }
+                });
+            });
+
+            // ========== TIMER DE REENVIO ==========
+            let timerSegundos = 30;
+            let timerInterval;
+
+            function iniciarTimer() {
+                clearInterval(timerInterval);
+                timerSegundos = 30;
+                atualizarTimer();
+                
+                timerInterval = setInterval(() => {
+                    timerSegundos--;
+                    atualizarTimer();
+                    
+                    if (timerSegundos <= 0) {
+                        clearInterval(timerInterval);
+                        resendBtn.disabled = false;
+                        resendBtn.style.opacity = '1';
+                        timerText.innerHTML = 'Você pode reenviar o código agora';
+                    }
+                }, 1000);
+            }
+
+            function atualizarTimer() {
+                timerText.innerHTML = 'Reenvio disponível em <strong>' + timerSegundos + 's</strong>';
+                if (timerSegundos > 0) {
+                    resendBtn.disabled = true;
+                    resendBtn.style.opacity = '0.5';
+                }
+            }
+
+            iniciarTimer();
+
+            // ========== REENVIO DE CÓDIGO ==========
+            resendBtn.addEventListener('click', function() {
+                if (timerSegundos <= 0) {
+                    // Simular reenvio
+                    resendBtn.textContent = '📧 Enviando...';
+                    resendBtn.disabled = true;
+                    resendBtn.style.opacity = '0.7';
+                    
+                    setTimeout(() => {
+                        resendBtn.textContent = '📧 Código reenviado!';
+                        resendBtn.style.backgroundColor = 'var(--success-bg)';
+                        resendBtn.style.borderColor = 'var(--success-color)';
+                        
+                        setTimeout(() => {
+                            resendBtn.textContent = '📧 Reenviar código';
+                            resendBtn.style.backgroundColor = '';
+                            resendBtn.style.borderColor = '';
+                            iniciarTimer();
+                        }, 2000);
+                    }, 1500);
+                }
+            });
+
+            // ========== SUBMISSÃO ==========
+            document.getElementById('verificationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Coletar código
+                let codigo = '';
+                let valido = true;
+                
+                codeInputs.forEach(input => {
+                    codigo += input.value;
+                    if (input.value.length === 0) {
+                        valido = false;
+                        input.classList.add('input-error');
+                    } else {
+                        input.classList.remove('input-error');
+                        input.classList.add('input-success');
+                    }
+                });
+                
+                if (!valido || codigo.length !== 6) {
+                    codeFeedback.textContent = 'Preencha todos os 6 dígitos';
+                    codeFeedback.className = 'error-message show error';
+                    return;
+                }
+                
+                // Simulação de verificação
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                submitBtn.querySelector('.btn-text').textContent = 'Verificando...';
+                
+                setTimeout(() => {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    
+                    // Código correto simulado: 123456
+                    if (codigo === '123456') {
+                        submitBtn.querySelector('.btn-text').textContent = '✓ Código verificado!';
+                        submitBtn.style.backgroundColor = 'var(--success-color)';
+                        
+                        codeFeedback.textContent = '✓ E-mail verificado com sucesso!';
+                        codeFeedback.className = 'error-message show success';
+                        
+                        setTimeout(() => {
+                            // Redirecionar para login ou dashboard
+                            // window.location.href = 'login.html';
+                            submitBtn.querySelector('.btn-text').textContent = 'Verificar código';
+                            submitBtn.style.backgroundColor = '';
+                        }, 2000);
+                    } else {
+                        submitBtn.querySelector('.btn-text').textContent = 'Verificar código';
+                        
+                        codeFeedback.textContent = '✗ Código incorreto. Tente novamente.';
+                        codeFeedback.className = 'error-message show error';
+                        
+                        codeInputs.forEach(input => {
+                            input.classList.add('input-error');
+                            input.classList.remove('input-success');
+                        });
+                        
+                        // Limpar inputs
+                        codeInputs.forEach(input => {
+                            input.value = '';
+                        });
+                        codeInputs[0].focus();
+                    }
+                }, 1500);
+            });
+
+            // ========== INICIALIZAÇÃO ==========
+            codeFeedback.textContent = '';
+            codeFeedback.className = 'error-message';
+            codeInputs[0].focus();
+        })();
+    </script>
+</body>
+</html>
