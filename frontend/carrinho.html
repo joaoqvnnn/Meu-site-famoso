@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Carrinho | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 20px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --bg-field-hover: #222222;
+            --border-field: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-placeholder: #666666;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --badge-bg: rgba(255, 255, 255, 0.1);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --bg-field-hover: #eeeeee;
+            --border-field: #e4e4e4;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-placeholder: #9ca3af;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --badge-bg: rgba(0, 0, 0, 0.06);
+            --success-color: #059669;
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --bg-field-hover: #eeeeee;
+                --border-field: #e4e4e4;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-placeholder: #9ca3af;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+                --badge-bg: rgba(0, 0, 0, 0.06);
+                --success-color: #059669;
+                --error-color: #dc2626;
+                --warning-color: #d97706;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --bg-field-hover: #222222;
+                --border-field: #2a2a2a;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-placeholder: #666666;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+                --badge-bg: rgba(255, 255, 255, 0.1);
+                --success-color: #10b981;
+                --error-color: #ef4444;
+                --warning-color: #f59e0b;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-field);
+            border-radius: 4px;
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-mix);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-back:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 0.3rem;
+            background: var(--bg-field);
+            border-radius: 25px;
+            padding: 0.3rem;
+            border: 1px solid var(--border-mix);
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        /* ========== CARRINHO ========== */
+        .cart-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .cart-header {
+            margin-bottom: 2rem;
+        }
+
+        .cart-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .cart-count {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cart-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .cart-item:hover {
+            border-color: var(--text-secondary);
+            box-shadow: var(--shadow-card);
+        }
+
+        .cart-item.removing {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        .item-poster {
+            width: 70px;
+            height: 100px;
+            background: var(--bg-field);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .item-type {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--error-color);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-remove:hover {
+            background: var(--error-color);
+            color: #ffffff;
+            border-color: var(--error-color);
+        }
+
+        /* ========== RESUMO ========== */
+        .cart-summary {
+            margin-top: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+            padding: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            font-size: 0.95rem;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid var(--border-mix);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .summary-label {
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-checkout:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-checkout.loading {
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-right-color: currentColor;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-checkout.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== CARRINHO VAZIO ========== */
+        .empty-cart {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-browse {
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 0.9rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-browse:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .cart-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .cart-title {
+                font-size: 1.6rem;
+            }
+
+            .cart-item {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-title {
+                font-size: 1.4rem;
+            }
+
+            .item-poster {
+                width: 50px;
+                height: 70px;
+                font-size: 1.5rem;
+            }
+
+            .item-price {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">▶</div>
+                <span class="logo-text">StreamPremium</span>
+            </a>
+
+            <div class="header-actions">
+                <a href="catalogo.html" class="btn-back">← Continuar comprando</a>
+
+                <div class="theme-selector">
+                    <button class="theme-option" data-theme-option="dark" type="button">🌙</button>
+                    <button class="theme-option" data-theme-option="light" type="button">☀️</button>
+                    <button class="theme-option active" data-theme-option="system" type="button">💻</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CARRINHO -->
+    <main class="cart-container">
+        <div class="cart-header">
+            <h1 class="cart-title">Seu carrinho</h1>
+            <p class="cart-count" id="cartCount">0 itens</p>
+        </div>
+
+        <!-- Itens do carrinho -->
+        <div class="cart-items" id="cartItems">
+            <!-- Gerado dinamicamente -->
+        </div>
+
+        <!-- Carrinho vazio -->
+        <div class="empty-cart" id="emptyCart" style="display:none;">
+            <div class="empty-icon">🛒</div>
+            <h2 class="empty-title">Seu carrinho está vazio</h2>
+            <p class="empty-text">Explore nosso catálogo e adicione títulos para assistir</p>
+            <a href="catalogo.html" class="btn-browse">🎬 Explorar catálogo</a>
+        </div>
+
+        <!-- Resumo -->
+        <div class="cart-summary" id="cartSummary" style="display:none;">
+            <div class="summary-row">
+                <span class="summary-label">Subtotal</span>
+                <span class="summary-value" id="subtotal">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Desconto</span>
+                <span class="summary-value" id="discount">R$ 0,00</span>
+            </div>
+            <div class="summary-row total">
+                <span class="summary-label">Total</span>
+                <span class="summary-value" id="total">R$ 0,00</span>
+            </div>
+
+            <button class="btn-checkout" id="btnCheckout">
+                <span class="spinner"></span>
+                <span class="btn-text">Finalizar compra</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== DADOS DO CARRINHO (SIMULADOS) ==========
+            let carrinho = [
+                { id: 1, titulo: 'Duna: Parte 2', tipo: 'Filme', preco: 29.90 },
+                { id: 2, titulo: 'Breaking Bad - Temporada 1', tipo: 'Série', preco: 49.90 },
+                { id: 3, titulo: 'Interestelar', tipo: 'Filme', preco: 19.90 },
+            ];
+
+            // ========== ELEMENTOS ==========
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const emptyCart = document.getElementById('emptyCart');
+            const cartSummary = document.getElementById('cartSummary');
+            const subtotalEl = document.getElementById('subtotal');
+            const discountEl = document.getElementById('discount');
+            const totalEl = document.getElementById('total');
+            const btnCheckout = document.getElementById('btnCheckout');
+
+            // ========== FUNÇÕES ==========
+            function formatarPreco(valor) {
+                return 'R$ ' + valor.toFixed(2).replace('.', ',');
+            }
+
+            function calcularTotais() {
+                const subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
+                const desconto = subtotal > 100 ? subtotal * 0.1 : 0;
+                const total = subtotal - desconto;
+                
+                return { subtotal, desconto, total };
+            }
+
+            function renderizarCarrinho() {
+                // Atualizar contagem
+                cartCount.textContent = carrinho.length + (carrinho.length === 1 ? ' item' : ' itens');
+
+                if (carrinho.length === 0) {
+                    cartItems.innerHTML = '';
+                    emptyCart.style.display = 'block';
+                    cartSummary.style.display = 'none';
+                    return;
+                }
+
+                emptyCart.style.display = 'none';
+                cartSummary.style.display = 'block';
+                cartItems.innerHTML = '';
+
+                // Renderizar itens
+                carrinho.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.style.animationDelay = (index * 0.1) + 's';
+                    
+                    div.innerHTML = `
+                        <div class="item-poster">🎬</div>
+                        <div class="item-info">
+                            <h3 class="item-title">${item.titulo}</h3>
+                            <p class="item-type">${item.tipo}</p>
+                            <p class="item-price">${formatarPreco(item.preco)}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-remove" data-id="${item.id}">
+                                🗑 Remover
+                            </button>
+                        </div>
+                    `;
+                    
+                    cartItems.appendChild(div);
+                });
+
+                // Adicionar eventos de remoção
+                document.querySelectorAll('.btn-remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        removerItem(id);
+                    });
+                });
+
+                // Atualizar totais
+                const totais = calcularTotais();
+                subtotalEl.textContent = formatarPreco(totais.subtotal);
+                discountEl.textContent = '-' + formatarPreco(totais.desconto);
+                totalEl.textContent = formatarPreco(totais.total);
+            }
+
+            function removerItem(id) {
+                const itemElement = document.querySelector(`.btn-remove[data-id="${id}"]`).closest('.cart-item');
+                itemElement.classList.add('removing');
+                
+                setTimeout(() => {
+                    carrinho = carrinho.filter(item => item.id !== id);
+                    renderizarCarrinho();
+                }, 300);
+            }
+
+            // ========== CHECKOUT ==========
+            btnCheckout.addEventListener('click', function() {
+                btnCheckout.classList.add('loading');
+                btnCheckout.disabled = true;
+                btnCheckout.querySelector('.btn-text').textContent = 'Processando...';
+                
+                setTimeout(() => {
+                    btnCheckout.classList.remove('loading');
+                    btnCheckout.disabled = false;
+                    btnCheckout.querySelector('.btn-text').textContent = '✓ Compra realizada!';
+                    btnCheckout.style.backgroundColor = 'var(--success-color)';
+                    
+                    // Limpar carrinho após compra
+                    setTimeout(() => {
+                        carrinho = [];
+                        renderizarCarrinho();
+                        btnCheckout.querySelector('.btn-text').textContent = 'Finalizar compra';
+                        btnCheckout.style.backgroundColor = '';
+                    }, 2000);
+                }, 1500);
+            });
+
+            // ========== INICIALIZAR ==========
+            renderizarCarrinho();
+        })();
+    </script>
+</body>
+</html>
