@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Pagamento Pendente | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 28px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --border-field: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+            --warning-color: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --pending-color: #f59e0b;
+            --qr-bg: #ffffff;
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --border-field: #e4e4e4;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08);
+            --warning-color: #d97706;
+            --warning-bg: rgba(217, 119, 6, 0.08);
+            --pending-color: #d97706;
+            --qr-bg: #ffffff;
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --border-field: #e4e4e4;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08);
+                --warning-color: #d97706;
+                --warning-bg: rgba(217, 119, 6, 0.08);
+                --pending-color: #d97706;
+                --qr-bg: #ffffff;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --border-field: #2a2a2a;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+                --warning-color: #f59e0b;
+                --warning-bg: rgba(245, 158, 11, 0.1);
+                --pending-color: #f59e0b;
+                --qr-bg: #ffffff;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes clockSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .pending-wrapper {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 0.4rem;
+            border: 1px solid var(--border-mix);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            animation: fadeInUp 0.5s ease 0.1s forwards;
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        .theme-icon {
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 2.5rem 2rem;
+            border: 1px solid var(--border-mix);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+        }
+
+        /* ========== ÍCONE PENDENTE ========== */
+        .pending-icon-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--warning-bg);
+            border: 3px solid var(--warning-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.8rem;
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .pending-icon {
+            font-size: 2.5rem;
+            animation: clockSpin 4s linear infinite;
+        }
+
+        /* ========== TÍTULO ========== */
+        .pending-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--pending-color);
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+
+        .pending-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* ========== QR CODE ========== */
+        .qr-section {
+            background: var(--qr-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .qr-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2px;
+            padding: 10px;
+        }
+
+        .qr-pixel {
+            width: 8px;
+            height: 8px;
+            background: #000000;
+            border-radius: 1px;
+        }
+
+        .qr-pixel.light {
+            background: #ffffff;
+        }
+
+        .qr-caption {
+            font-size: 0.85rem;
+            color: #555555;
+            margin-top: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* ========== CÓDIGO PIX ========== */
+        .pix-code {
+            background: var(--bg-field);
+            border: 1px solid var(--border-mix);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .pix-code-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .pix-code-value {
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            word-break: break-all;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* ========== DETALHES ========== */
+        .order-details {
+            background: var(--bg-field);
+            border: 1px solid var(--border-mix);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .detail-row:not(:last-child) {
+            border-bottom: 1px solid var(--border-mix);
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ========== TIMER ========== */
+        .timer-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .timer-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .timer-countdown {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--warning-color);
+            margin-top: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== BOTÕES ========== */
+        .btn-primary {
+            width: 100%;
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-btn);
+            padding: 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 24px;
+            }
+            .pending-title {
+                font-size: 1.6rem;
+            }
+            .pending-icon-container {
+                width: 70px;
+                height: 70px;
+            }
+            .pending-icon {
+                font-size: 2rem;
+            }
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
+            .qr-pixel {
+                width: 6px;
+                height: 6px;
+            }
+            .theme-option {
+                padding: 0.35rem 0.8rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <div class="pending-wrapper">
+        <!-- Seletor de tema -->
+        <div class="theme-selector">
+            <button class="theme-option" data-theme-option="dark" type="button">
+                <span class="theme-icon">🌙</span> Preto
+            </button>
+            <button class="theme-option" data-theme-option="light" type="button">
+                <span class="theme-icon">☀️</span> Branco
+            </button>
+            <button class="theme-option active" data-theme-option="system" type="button">
+                <span class="theme-icon">💻</span> Sistema
+            </button>
+        </div>
+
+        <!-- Card -->
+        <div class="card">
+            <!-- Ícone pendente -->
+            <div class="pending-icon-container">
+                <span class="pending-icon">⏳</span>
+            </div>
+
+            <!-- Título -->
+            <h1 class="pending-title">Pagamento pendente</h1>
+            <p class="pending-subtitle">
+                Seu pedido foi gerado! Escaneie o QR Code abaixo<br>
+                ou copie o código PIX para concluir o pagamento.
+            </p>
+
+            <!-- QR Code -->
+            <div class="qr-section">
+                <div class="qr-code" id="qrCode">
+                    <div class="qr-placeholder" id="qrPlaceholder">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+                <p class="qr-caption">Escaneie com o app do seu banco</p>
+            </div>
+
+            <!-- Código PIX -->
+            <div class="pix-code">
+                <p class="pix-code-label">CÓDIGO PIX (COPIE E COLE)</p>
+                <p class="pix-code-value" id="pixCodeValue">
+                    00020126580014BR.GOV.BCB.PIX0136a1b2c3d4-e5f6-7890-abcd-ef1234567890520400005303986540510.005802BR5909StreamPrem6009Sao Paulo62070503***6304AB12
+                </p>
+                <button class="btn-copy" id="btnCopy" type="button">
+                    📋 Copiar código
+                </button>
+            </div>
+
+            <!-- Detalhes do pedido -->
+            <div class="order-details">
+                <div class="detail-row">
+                    <span class="detail-label">Número do pedido</span>
+                    <span class="detail-value" id="orderNumber">#SP-2024-001234</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valor</span>
+                    <span class="detail-value" id="orderValue">R$ 99,70</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Método</span>
+                    <span class="detail-value">PIX</span>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="timer-section">
+                <p class="timer-text">O código expira em</p>
+                <p class="timer-countdown" id="timerCountdown">30:00</p>
+            </div>
+
+            <!-- Ações -->
+            <button class="btn-primary" id="btnCheckPayment">
+                ✅ Já fiz o pagamento
+            </button>
+            <a href="catalogo.html" class="btn-secondary">
+                ← Voltar para o catálogo
+            </a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== GERAR QR CODE SIMULADO ==========
+            function gerarQRCode() {
+                const container = document.getElementById('qrPlaceholder');
+                container.innerHTML = '';
+                
+                // Gerar padrão pseudo-aleatório
+                for (let i = 0; i < 20; i++) {
+                    for (let j = 0; j < 20; j++) {
+                        const pixel = document.createElement('div');
+                        pixel.className = 'qr-pixel';
+                        
+                        // Padrão determinístico para parecer um QR code real
+                        const isDark = (i * j + i + j) % 3 !== 0 || 
+                                       (i > 4 && i < 8 && j > 4 && j < 8) ||
+                                       (i > 11 && i < 15 && j > 11 && j < 15) ||
+                                       (i > 4 && i < 8 && j > 11 && j < 15) ||
+                                       (i > 11 && i < 15 && j > 4 && j < 8);
+                        
+                        if (isDark) {
+                            pixel.style.background = '#000000';
+                        } else {
+                            pixel.style.background = '#ffffff';
+                            pixel.classList.add('light');
+                        }
+                        
+                        container.appendChild(pixel);
+                    }
+                }
+            }
+
+            // ========== TIMER ==========
+            let tempoTotal = 30 * 60; // 30 minutos em segundos
+            let timerInterval;
+
+            function formatarTempo(segundos) {
+                const minutos = Math.floor(segundos / 60);
+                const segundosRestantes = segundos % 60;
+                return String(minutos).padStart(2, '0') + ':' + String(segundosRestantes).padStart(2, '0');
+            }
+
+            function iniciarTimer() {
+                timerInterval = setInterval(() => {
+                    tempoTotal--;
+                    document.getElementById('timerCountdown').textContent = formatarTempo(tempoTotal);
+                    
+                    if (tempoTotal <= 0) {
+                        clearInterval(timerInterval);
+                        document.getElementById('timerCountdown').textContent = 'Expirado';
+                        document.getElementById('timerCountdown').style.color = '#ef4444';
+                    }
+                }, 1000);
+            }
+
+            // ========== COPIAR CÓDIGO PIX ==========
+            document.getElementById('btnCopy').addEventListener('click', function() {
+                const codigo = document.getElementById('pixCodeValue').textContent;
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(codigo).then(() => {
+                        this.textContent = '✓ Copiado!';
+                        this.style.color = '#10b981';
+                        this.style.borderColor = '#10b981';
+                        
+                        setTimeout(() => {
+                            this.textContent = '📋 Copiar código';
+                            this.style.color = '';
+                            this.style.borderColor = '';
+                        }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(codigo);
+                    });
+                } else {
+                    fallbackCopy(codigo);
+                }
+            });
+
+            function fallbackCopy(texto) {
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                const btn = document.getElementById('btnCopy');
+                btn.textContent = '✓ Copiado!';
+                btn.style.color = '#10b981';
+                btn.style.borderColor = '#10b981';
+                
+                setTimeout(() => {
+                    btn.textContent = '📋 Copiar código';
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+            }
+
+            // ========== VERIFICAR PAGAMENTO ==========
+            document.getElementById('btnCheckPayment').addEventListener('click', function() {
+                this.textContent = '🔄 Verificando...';
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                
+                setTimeout(() => {
+                    // Simulação: redirecionar para página de sucesso
+                    // window.location.href = 'pagamento-sucesso.html';
+                    
+                    this.textContent = '✅ Pagamento confirmado!';
+                    this.style.backgroundColor = '#10b981';
+                    this.style.color = '#ffffff';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'pagamento-sucesso.html';
+                    }, 1500);
+                }, 2000);
+            });
+
+            // ========== DADOS DO PEDIDO ==========
+            function carregarDadosPedido() {
+                try {
+                    const pedidoSalvo = localStorage.getItem('streampremium_pedido');
+                    if (pedidoSalvo) {
+                        const pedido = JSON.parse(pedidoSalvo);
+                        if (pedido.numero) {
+                            document.getElementById('orderNumber').textContent = pedido.numero;
+                        }
+                        if (pedido.total) {
+                            document.getElementById('orderValue').textContent = pedido.total;
+                        }
+                    }
+                } catch (e) {
+                    // Usar dados padrão
+                }
+            }
+
+            // ========== INICIALIZAR ==========
+            gerarQRCode();
+            iniciarTimer();
+            carregarDadosPedido();
+        })();
+    </script>
+</body>
+</html>
