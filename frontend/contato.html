@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Contato | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 20px;
+            --radius-btn: 14px;
+            --radius-field: 12px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --bg-field-hover: #222222;
+            --border-field: #2a2a2a;
+            --border-field-focus: #ffffff;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-placeholder: #666666;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error-bg: rgba(239, 68, 68, 0.1);
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --bg-field-hover: #eeeeee;
+            --border-field: #e4e4e4;
+            --border-field-focus: #171717;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-placeholder: #9ca3af;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --success-color: #059669;
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+            --success-bg: rgba(5, 150, 105, 0.08);
+            --error-bg: rgba(220, 38, 38, 0.06);
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --bg-field-hover: #eeeeee;
+                --border-field: #e4e4e4;
+                --border-field-focus: #171717;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-placeholder: #9ca3af;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+                --success-color: #059669;
+                --error-color: #dc2626;
+                --warning-color: #d97706;
+                --success-bg: rgba(5, 150, 105, 0.08);
+                --error-bg: rgba(220, 38, 38, 0.06);
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --bg-field-hover: #222222;
+                --border-field: #2a2a2a;
+                --border-field-focus: #ffffff;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-placeholder: #666666;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+                --success-color: #10b981;
+                --error-color: #ef4444;
+                --warning-color: #f59e0b;
+                --success-bg: rgba(16, 185, 129, 0.1);
+                --error-bg: rgba(239, 68, 68, 0.1);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-field);
+            border-radius: 4px;
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-mix);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--border-mix);
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-back:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 0.3rem;
+            background: var(--bg-field);
+            border-radius: 25px;
+            padding: 0.3rem;
+            border: 1px solid var(--border-mix);
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        /* ========== CONTEÚDO ========== */
+        .contact-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* ========== INFORMAÇÕES DE CONTATO ========== */
+        .info-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: var(--text-secondary);
+            box-shadow: var(--shadow-card);
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--bg-field);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .info-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.15rem;
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========== FORMULÁRIO ========== */
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-card);
+            padding: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .field-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
+        }
+
+        .field-icon {
+            display: inline-flex;
+            width: 17px;
+            height: 17px;
+            color: var(--icon-color);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            background-color: var(--bg-field);
+            border: 1.5px solid var(--border-field);
+            border-radius: var(--radius-field);
+            padding: 0.9rem 1.1rem;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+            letter-spacing: 0.2px;
+            -webkit-appearance: none;
+            appearance: none;
+            font-family: var(--font-sans);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-placeholder);
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .form-input:hover, .form-textarea:hover {
+            background-color: var(--bg-field-hover);
+            border-color: var(--border-mix);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            background-color: var(--bg-field);
+            border-color: var(--border-field-focus);
+            box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.08);
+        }
+
+        .form-input.input-error, .form-textarea.input-error {
+            border-color: var(--error-color);
+            background-color: var(--error-bg);
+            animation: shake 0.4s ease;
+        }
+
+        .error-message {
+            font-size: 0.75rem;
+            margin-top: 0.35rem;
+            font-weight: 450;
+            min-height: 1.1rem;
+            letter-spacing: 0.2px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .error-message.error {
+            color: var(--error-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-submit:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-submit.loading {
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-right-color: currentColor;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-submit.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== FAQ ========== */
+        .faq-section {
+            margin-top: 3rem;
+        }
+
+        .faq-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.3px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-mix);
+            border-radius: 14px;
+            margin-bottom: 0.8rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--bg-field);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.2rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .contact-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.4rem;
+            }
+
+            .info-card {
+                flex-wrap: wrap;
+                gap: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">▶</div>
+                <span class="logo-text">StreamPremium</span>
+            </a>
+
+            <div class="header-actions">
+                <a href="index.html" class="btn-back">← Voltar</a>
+
+                <div class="theme-selector">
+                    <button class="theme-option" data-theme-option="dark" type="button">🌙</button>
+                    <button class="theme-option" data-theme-option="light" type="button">☀️</button>
+                    <button class="theme-option active" data-theme-option="system" type="button">💻</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO -->
+    <main class="contact-container">
+        <h1 class="page-title">Fale conosco</h1>
+        <p class="page-subtitle">Estamos aqui para ajudar. Entre em contato pelos canais abaixo.</p>
+
+        <div class="contact-grid">
+            <!-- INFORMAÇÕES -->
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">📧</div>
+                    <div class="info-content">
+                        <p class="info-title">E-mail</p>
+                        <p class="info-text">suporte@streampremium.com</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📱</div>
+                    <div class="info-content">
+                        <p class="info-title">Telefone</p>
+                        <p class="info-text">+55 44 99869-1568</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">💬</div>
+                    <div class="info-content">
+                        <p class="info-title">Chat ao vivo</p>
+                        <p class="info-text">Disponível 24/7</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <div class="info-content">
+                        <p class="info-title">Endereço</p>
+                        <p class="info-text">Av. Paulista, 1000 - São Paulo, SP</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <div class="form-card">
+                <h2 class="form-title">Envie uma mensagem</h2>
+                
+                <form id="contactForm" novalidate>
+                    <div class="field-group">
+                        <label class="field-label" for="nome">
+                            <span class="field-icon">👤</span>
+                            Nome completo
+                        </label>
+                        <input type="text" id="nome" class="form-input" placeholder="Seu nome" required>
+                        <div class="error-message" id="nomeFeedback"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="email">
+                            <span class="field-icon">✉️</span>
+                            E-mail
+                        </label>
+                        <input type="email" id="email" class="form-input" placeholder="Seu e-mail" required>
+                        <div class="error-message" id="emailFeedback"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="assunto">
+                            <span class="field-icon">📋</span>
+                            Assunto
+                        </label>
+                        <input type="text" id="assunto" class="form-input" placeholder="Motivo do contato" required>
+                        <div class="error-message" id="assuntoFeedback"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="mensagem">
+                            <span class="field-icon">💬</span>
+                            Mensagem
+                        </label>
+                        <textarea id="mensagem" class="form-textarea" placeholder="Descreva sua dúvida ou problema..." required></textarea>
+                        <div class="error-message" id="mensagemFeedback"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="btnSubmit">
+                        <span class="spinner"></span>
+                        <span class="btn-text">Enviar mensagem</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <section class="faq-section">
+            <h2 class="faq-title">Perguntas frequentes</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Como cancelo minha assinatura?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Você pode cancelar sua assinatura a qualquer momento acessando 
+                    "Minha conta" > "Assinaturas" > "Gerenciar assinatura" > "Cancelar".
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Como funciona o período de teste?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Oferecemos 7 dias de teste gratuito para novos assinantes. 
+                    Você pode cancelar antes do fim do período sem custo algum.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Posso assistir em múltiplos dispositivos?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Sim! O plano Premium permite assistir em até 4 dispositivos 
+                    simultaneamente. O plano Família permite até 6.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Como funciona o reembolso?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Oferecemos reembolso total em até 7 dias após a compra, 
+                    desde que o conteúdo não tenha sido acessado.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== FAQ ==========
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    const item = this.parentElement;
+                    item.classList.toggle('open');
+                });
+            });
+
+            // ========== FORMULÁRIO ==========
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const assunto = document.getElementById('assunto').value;
+                const mensagem = document.getElementById('mensagem').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                let valido = true;
+                
+                if (!nome || nome.length < 3) {
+                    document.getElementById('nome').className = 'form-input input-error';
+                    document.getElementById('nomeFeedback').textContent = 'Informe seu nome';
+                    document.getElementById('nomeFeedback').className = 'error-message show error';
+                    valido = false;
+                }
+                
+                if (!emailRegex.test(email)) {
+                    document.getElementById('email').className = 'form-input input-error';
+                    document.getElementById('emailFeedback').textContent = 'E-mail inválido';
+                    document.getElementById('emailFeedback').className = 'error-message show error';
+                    valido = false;
+                }
+                
+                if (!assunto || assunto.length < 3) {
+                    document.getElementById('assunto').className = 'form-input input-error';
+                    document.getElementById('assuntoFeedback').textContent = 'Informe o assunto';
+                    document.getElementById('assuntoFeedback').className = 'error-message show error';
+                    valido = false;
+                }
+                
+                if (!mensagem || mensagem.length < 10) {
+                    document.getElementById('mensagem').className = 'form-textarea input-error';
+                    document.getElementById('mensagemFeedback').textContent = 'Mensagem muito curta';
+                    document.getElementById('mensagemFeedback').className = 'error-message show error';
+                    valido = false;
+                }
+                
+                if (!valido) return;
+                
+                const btn = document.getElementById('btnSubmit');
+                btn.classList.add('loading');
+                btn.disabled = true;
+                btn.querySelector('.btn-text').textContent = 'Enviando...';
+                
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    btn.querySelector('.btn-text').textContent = '✓ Mensagem enviada!';
+                    btn.style.backgroundColor = 'var(--success-color)';
+                    
+                    // Limpar formulário
+                    document.getElementById('contactForm').reset();
+                    
+                    setTimeout(() => {
+                        btn.querySelector('.btn-text').textContent = 'Enviar mensagem';
+                        btn.style.backgroundColor = '';
+                    }, 2000);
+                }, 1500);
+            });
+        })();
+    </script>
+</body>
+</html>
