@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Recuperar Senha | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 28px;
+            --radius-field: 14px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --bg-field-hover: #222222;
+            --border-field: #2a2a2a;
+            --border-field-focus: #ffffff;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-placeholder: #666666;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --icon-color: #a1a1a1;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
+            --error-bg: rgba(239, 68, 68, 0.08);
+            --warning-bg: rgba(245, 158, 11, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.08);
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --bg-field-hover: #eeeeee;
+            --border-field: #e4e4e4;
+            --border-field-focus: #171717;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-placeholder: #9ca3af;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --icon-color: #555555;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+            --success-color: #059669;
+            --error-bg: rgba(220, 38, 38, 0.04);
+            --warning-bg: rgba(217, 119, 6, 0.04);
+            --success-bg: rgba(5, 150, 105, 0.04);
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --bg-field-hover: #eeeeee;
+                --border-field: #e4e4e4;
+                --border-field-focus: #171717;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-placeholder: #9ca3af;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --icon-color: #555555;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+                --error-color: #dc2626;
+                --warning-color: #d97706;
+                --success-color: #059669;
+                --error-bg: rgba(220, 38, 38, 0.04);
+                --warning-bg: rgba(217, 119, 6, 0.04);
+                --success-bg: rgba(5, 150, 105, 0.04);
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --bg-field-hover: #222222;
+                --border-field: #2a2a2a;
+                --border-field-focus: #ffffff;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-placeholder: #666666;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --icon-color: #a1a1a1;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+                --error-color: #ef4444;
+                --warning-color: #f59e0b;
+                --success-color: #10b981;
+                --error-bg: rgba(239, 68, 68, 0.08);
+                --warning-bg: rgba(245, 158, 11, 0.08);
+                --success-bg: rgba(16, 185, 129, 0.08);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 0.4rem;
+            border: 1px solid var(--border-mix);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0, 0, 1) 0.1s forwards;
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            letter-spacing: 0.2px;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        .theme-icon {
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 2.5rem 2rem;
+            border: 1px solid var(--border-mix);
+            transition: background-color 0.35s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) 0.2s forwards;
+        }
+
+        .brand-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        .logo-mark {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.1rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--bg-card);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .icon-recovery {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--warning-bg);
+            border: 2px solid var(--warning-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .form-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            line-height: 1.2;
+        }
+
+        .form-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .field-group {
+            margin-bottom: 1.3rem;
+            position: relative;
+            text-align: left;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
+        }
+
+        .field-icon {
+            display: inline-flex;
+            width: 17px;
+            height: 17px;
+            color: var(--icon-color);
+            opacity: 0.8;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--bg-field);
+            border: 1.5px solid var(--border-field);
+            border-radius: var(--radius-field);
+            padding: 0.95rem 1.1rem;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+            letter-spacing: 0.2px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-placeholder);
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .form-input:hover {
+            background-color: var(--bg-field-hover);
+            border-color: var(--border-mix);
+        }
+
+        .form-input:focus {
+            background-color: var(--bg-field);
+            border-color: var(--border-field-focus);
+            box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.08);
+        }
+
+        .form-input.input-error {
+            border-color: var(--error-color);
+            background-color: var(--error-bg);
+            animation: shake 0.4s ease;
+        }
+
+        .form-input.input-success {
+            border-color: var(--success-color);
+            background-color: var(--success-bg);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .error-message {
+            font-size: 0.76rem;
+            margin-top: 0.35rem;
+            font-weight: 450;
+            min-height: 1.1rem;
+            letter-spacing: 0.2px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message.error {
+            color: var(--error-color);
+        }
+
+        .error-message.success {
+            color: var(--success-color);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-right-color: currentColor;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message-box {
+            background: var(--success-bg);
+            border: 1px solid var(--success-color);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            display: none;
+        }
+
+        .success-message-box.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-message-box p {
+            font-size: 0.9rem;
+            color: var(--success-color);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .back-link a {
+            color: var(--text-link);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.2px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .back-link a:hover {
+            border-bottom-color: var(--text-link);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 24px;
+            }
+            .form-title {
+                font-size: 1.6rem;
+            }
+            .brand-area {
+                margin-bottom: 1.4rem;
+            }
+            .theme-option {
+                padding: 0.35rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            .theme-icon {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <div class="auth-wrapper">
+        <!-- Seletor de tema -->
+        <div class="theme-selector" role="group" aria-label="Seletor de tema">
+            <button class="theme-option" data-theme-option="dark" type="button">
+                <span class="theme-icon">🌙</span> Preto
+            </button>
+            <button class="theme-option" data-theme-option="light" type="button">
+                <span class="theme-icon">☀️</span> Branco
+            </button>
+            <button class="theme-option active" data-theme-option="system" type="button">
+                <span class="theme-icon">💻</span> Sistema
+            </button>
+        </div>
+
+        <!-- Card -->
+        <div class="card">
+            <!-- Marca -->
+            <div class="brand-area">
+                <div class="logo-mark" aria-hidden="true">▶</div>
+                <span class="brand-name">STREAMPREMIUM</span>
+            </div>
+
+            <!-- Ícone de recuperação -->
+            <div class="icon-recovery" aria-hidden="true">🔑</div>
+
+            <!-- Título -->
+            <h1 class="form-title">Recuperar senha</h1>
+            <p class="form-subtitle">
+                Digite seu e-mail abaixo e enviaremos<br>
+                instruções para redefinir sua senha
+            </p>
+
+            <!-- Mensagem de sucesso -->
+            <div class="success-message-box" id="successBox">
+                <p>✓ E-mail enviado com sucesso! Verifique sua caixa de entrada.</p>
+            </div>
+
+            <!-- Formulário -->
+            <form id="recoveryForm" novalidate autocomplete="off">
+                <div class="field-group">
+                    <label class="field-label" for="email">
+                        <span class="field-icon" aria-hidden="true">✉️</span>
+                        E-mail
+                    </label>
+                    <input type="email" id="email" class="form-input" placeholder="voce@exemplo.com" autocomplete="email" required>
+                    <div class="error-message" id="emailFeedback"></div>
+                </div>
+
+                <!-- Botão -->
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">Enviar instruções</span>
+                </button>
+            </form>
+
+            <!-- Link voltar -->
+            <div class="back-link">
+                <a href="login.html">← Voltar para o login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== ELEMENTOS ==========
+            const emailInput = document.getElementById('email');
+            const emailFeedback = document.getElementById('emailFeedback');
+            const submitBtn = document.getElementById('submitBtn');
+            const successBox = document.getElementById('successBox');
+
+            // ========== FUNÇÕES DE FEEDBACK ==========
+            function mostrarFeedback(elemento, mensagem, tipo) {
+                elemento.textContent = mensagem;
+                elemento.className = 'error-message show ' + tipo;
+            }
+
+            function limparFeedback(elemento) {
+                elemento.textContent = '';
+                elemento.className = 'error-message';
+            }
+
+            // ========== VALIDAÇÃO DE EMAIL ==========
+            emailInput.addEventListener('input', function() {
+                this.value = this.value.toLowerCase().replace(/\s+/g, '');
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(this.value)) {
+                    this.className = 'form-input input-success';
+                    mostrarFeedback(emailFeedback, '✓ E-mail válido', 'success');
+                } else if (this.value.length > 0) {
+                    this.className = 'form-input';
+                    limparFeedback(emailFeedback);
+                } else {
+                    this.className = 'form-input';
+                    limparFeedback(emailFeedback);
+                }
+                
+                // Esconder mensagem de sucesso se começar a digitar
+                successBox.classList.remove('show');
+            });
+
+            emailInput.addEventListener('blur', function() {
+                if (this.value.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
+                    this.className = 'form-input input-error';
+                    mostrarFeedback(emailFeedback, '✗ E-mail inválido', 'error');
+                }
+            });
+
+            // ========== SUBMISSÃO ==========
+            document.getElementById('recoveryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const emailValor = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!emailRegex.test(emailValor)) {
+                    emailInput.className = 'form-input input-error';
+                    mostrarFeedback(emailFeedback, '✗ Informe um e-mail válido', 'error');
+                    emailInput.focus();
+                    return;
+                }
+                
+                emailInput.className = 'form-input input-success';
+                mostrarFeedback(emailFeedback, '✓ E-mail válido', 'success');
+                
+                // Estado de carregamento
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                submitBtn.querySelector('.btn-text').textContent = 'Enviando...';
+                
+                // Simulação de envio
+                setTimeout(() => {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    submitBtn.querySelector('.btn-text').textContent = 'Enviar instruções';
+                    
+                    // Mostrar mensagem de sucesso
+                    successBox.classList.add('show');
+                    
+                    // Limpar campo
+                    emailInput.value = '';
+                    emailInput.className = 'form-input';
+                    limparFeedback(emailFeedback);
+                    
+                    // Preparado para futura integração com API:
+                    /*
+                    fetch('/api/recuperar-senha', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailValor })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        // Mostrar mensagem de sucesso
+                    })
+                    .catch(err => {
+                        // Tratar erro
+                    });
+                    */
+                }, 1500);
+            });
+        })();
+    </script>
+</body>
+</html>
