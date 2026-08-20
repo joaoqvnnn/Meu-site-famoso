@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StreamPremium</title>
+    <script>
+        var pagina = window.location.pathname.split('/').pop();
+        if (pagina && pagina.endsWith('.html')) {
+            window.location.href = '/Meu-site-famoso/frontend/' + pagina;
+        } else {
+            window.location.href = '/Meu-site-famoso/frontend/index.html';
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecionando...</p>
+</body>
+</html>
