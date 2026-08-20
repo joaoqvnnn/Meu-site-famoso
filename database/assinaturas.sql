@@ -1,228 +1,238 @@
 -- ============================================
--- STREAMPREMIUM - TABELA DE PAGAMENTOS
+-- STREAMPREMIUM - TABELA DE ASSINATURAS
 -- ============================================
 
 -- Usar banco de dados
 USE streampremium;
 
 -- ============================================
--- CRIAÇÃO DA TABELA DE PAGAMENTOS
+-- CRIAÇÃO DA TABELA DE ASSINATURAS
 -- ============================================
-CREATE TABLE IF NOT EXISTS pagamentos (
+CREATE TABLE IF NOT EXISTS assinaturas (
     -- Identificação
     id INT PRIMARY KEY AUTO_INCREMENT,
-    pedido_id INT,
     usuario_id INT NOT NULL,
-    assinatura_id INT,
     
-    -- Valores
+    -- Plano
+    plano VARCHAR(20) NOT NULL,
     valor DECIMAL(10,2) NOT NULL,
-    metodo VARCHAR(20) NOT NULL,
     
     -- Status
-    status VARCHAR(20) DEFAULT 'pendente',
-    
-    -- Dados específicos
-    codigo_pix TEXT,
-    codigo_boleto TEXT,
-    detalhes JSON,
+    status VARCHAR(20) DEFAULT 'ativa',
+    metodo_pagamento VARCHAR(20),
     
     -- Datas
-    expira_em TIMESTAMP NULL,
-    reembolsado_em TIMESTAMP NULL,
+    inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    proxima_cobranca TIMESTAMP,
+    cancelado_em TIMESTAMP NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     -- Chaves estrangeiras
-    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE SET NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (assinatura_id) REFERENCES assinaturas(id) ON DELETE SET NULL,
     
     -- Índices
-    INDEX idx_usuario_pagamento (usuario_id),
-    INDEX idx_pedido_pagamento (pedido_id),
-    INDEX idx_status_pagamento (status),
-    INDEX idx_metodo (metodo),
-    INDEX idx_criado_em_pagamento (criado_em)
+    INDEX idx_usuario_assinatura (usuario_id),
+    INDEX idx_status_assinatura (status),
+    INDEX idx_plano_assinatura (plano),
+    INDEX idx_proxima_cobranca (proxima_cobranca)
 ) ENGINE=InnoDB;
 
 -- ============================================
--- INSERÇÃO DE PAGAMENTOS DE EXEMPLO
+-- INSERÇÃO DE ASSINATURAS DE EXEMPLO
 -- ============================================
 
--- Pagamento 1: Pedido 1 (João) - Cartão
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, detalhes) VALUES
-(1, 1, 49.80, 'cartao', 'aprovado', JSON_OBJECT(
-    'bandeira', 'Visa',
-    'ultimos_digitos', '4242',
-    'parcelas', 2,
-    'valor_parcela', 24.90
+-- Assinatura 1: João (Premium)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(1, 'premium', 29.90, 'ativa', 'cartao', '2024-01-15 10:00:00', '2024-12-15 10:00:00');
+
+-- Assinatura 2: Maria (Básico)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(2, 'basico', 14.90, 'ativa', 'pix', '2024-02-22 10:00:00', '2024-12-22 10:00:00');
+
+-- Assinatura 3: Pedro (Família)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(3, 'familia', 49.90, 'ativa', 'cartao', '2024-03-10 10:00:00', '2024-12-10 10:00:00');
+
+-- Assinatura 4: Ana (Premium - Pendente)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(4, 'premium', 29.90, 'pendente', 'boleto', '2024-04-05 10:00:00', '2024-12-05 10:00:00');
+
+-- Assinatura 5: Carlos (Básico - Cancelada)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca, cancelado_em) VALUES
+(5, 'basico', 14.90, 'cancelada', 'cartao', '2024-05-18 10:00:00', '2024-12-18 10:00:00', '2024-11-18 15:30:00');
+
+-- Assinatura 6: Juliana (Premium)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(6, 'premium', 29.90, 'ativa', 'cartao', '2024-06-30 10:00:00', '2024-12-30 10:00:00');
+
+-- Assinatura 7: Roberto (Família - Expirada)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(7, 'familia', 49.90, 'expirada', 'cartao', '2024-07-12 10:00:00', '2024-11-12 10:00:00');
+
+-- Assinatura 8: Fernanda (Básico - Pendente)
+INSERT INTO assinaturas (usuario_id, plano, valor, status, metodo_pagamento, inicio, proxima_cobranca) VALUES
+(8, 'basico', 14.90, 'pendente', 'pix', '2024-08-25 10:00:00', '2024-12-25 10:00:00');
+
+-- ============================================
+-- TABELA DE PLANOS
+-- ============================================
+CREATE TABLE IF NOT EXISTS planos (
+    id VARCHAR(20) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    recursos JSON,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Inserir planos
+INSERT INTO planos (id, nome, preco, recursos) VALUES
+('gratuito', 'Gratuito', 0.00, JSON_ARRAY(
+    'Acesso limitado ao catálogo',
+    'Qualidade SD (480p)',
+    '1 tela simultânea',
+    'Com anúncios'
+)),
+('basico', 'Básico', 14.90, JSON_ARRAY(
+    'Acesso ao catálogo básico',
+    'Qualidade HD (720p)',
+    '1 tela simultânea',
+    'Sem anúncios'
+)),
+('premium', 'Premium', 29.90, JSON_ARRAY(
+    'Acesso ilimitado a todo catálogo',
+    'Qualidade 4K Ultra HD',
+    '4 telas simultâneas',
+    'Downloads offline',
+    'Sem anúncios'
+)),
+('familia', 'Família', 49.90, JSON_ARRAY(
+    'Acesso ilimitado a todo catálogo',
+    'Qualidade 4K Ultra HD',
+    '6 telas simultâneas',
+    'Downloads offline',
+    'Perfis para toda família',
+    'Sem anúncios'
 ));
-
--- Pagamento 2: Pedido 2 (Maria) - PIX
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, codigo_pix, expira_em) VALUES
-(2, 2, 49.90, 'pix', 'pendente', '00020126580014BR.GOV.BCB.PIX0136a1b2c3d4-e5f6-7890-abcd-ef1234567890520400005303986540510.005802BR5909StreamPrem6009Sao Paulo62070503***6304AB12', DATE_ADD(NOW(), INTERVAL 30 MINUTE));
-
--- Pagamento 3: Pedido 3 (Pedro) - Cartão
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, detalhes) VALUES
-(3, 3, 24.90, 'cartao', 'aprovado', JSON_OBJECT(
-    'bandeira', 'Mastercard',
-    'ultimos_digitos', '5555',
-    'parcelas', 1,
-    'valor_parcela', 24.90
-));
-
--- Pagamento 4: Pedido 4 (Ana) - Boleto
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, codigo_boleto, expira_em) VALUES
-(4, 4, 39.90, 'boleto', 'pendente', '34191.79001 01043.510047 91020.150008 7 12345678901234567', DATE_ADD(NOW(), INTERVAL 3 DAY));
-
--- Pagamento 5: Pedido 5 (Carlos) - Cartão (falhou)
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, detalhes) VALUES
-(5, 5, 34.90, 'cartao', 'falhou', JSON_OBJECT(
-    'motivo', 'Cartão recusado pela operadora',
-    'codigo_erro', 'CARD_DECLINED'
-));
-
--- Pagamento 6: Pedido 6 (Juliana) - PIX (aprovado)
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, codigo_pix) VALUES
-(6, 6, 49.80, 'pix', 'aprovado', '00020126580014BR.GOV.BCB.PIX0136b2c3d4e5-f6a7-8901-bcde-f23456789012520400005303986540510.005802BR5909StreamPrem6009Sao Paulo62070503***6304CD34');
-
--- Pagamento 7: Pedido 7 (Roberto) - Cartão
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, detalhes) VALUES
-(7, 7, 40.41, 'cartao', 'aprovado', JSON_OBJECT(
-    'bandeira', 'Visa',
-    'ultimos_digitos', '0001',
-    'parcelas', 1,
-    'valor_parcela', 40.41
-));
-
--- Pagamento 8: Pedido 8 (Fernanda) - Cartão
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, detalhes) VALUES
-(8, 8, 29.90, 'cartao', 'aprovado', JSON_OBJECT(
-    'bandeira', 'Elo',
-    'ultimos_digitos', '7890',
-    'parcelas', 1,
-    'valor_parcela', 29.90
-));
-
--- Pagamento 9: Assinatura (João) - Cartão
-INSERT INTO pagamentos (usuario_id, assinatura_id, valor, metodo, status, descricao) VALUES
-(1, 1, 29.90, 'cartao', 'aprovado', 'Assinatura Premium - Dezembro');
-
--- Pagamento 10: Reembolso (Roberto)
-INSERT INTO pagamentos (pedido_id, usuario_id, valor, metodo, status, reembolsado_em) VALUES
-(7, 7, -40.41, 'cartao', 'reembolsado', NOW());
 
 -- ============================================
 -- CONSULTAS ÚTEIS
 -- ============================================
 
--- Buscar todos os pagamentos de um usuário
--- SELECT * FROM pagamentos WHERE usuario_id = 1;
+-- Buscar todas as assinaturas ativas
+-- SELECT * FROM assinaturas WHERE status = 'ativa';
 
--- Buscar pagamentos por status
--- SELECT * FROM pagamentos WHERE status = 'aprovado';
+-- Buscar assinatura de um usuário
+-- SELECT * FROM assinaturas WHERE usuario_id = 1 AND status = 'ativa';
 
--- Buscar pagamentos por método
--- SELECT * FROM pagamentos WHERE metodo = 'pix';
+-- Buscar assinaturas por plano
+-- SELECT * FROM assinaturas WHERE plano = 'premium';
 
--- Calcular receita total de pagamentos aprovados
--- SELECT SUM(valor) as receita_total FROM pagamentos WHERE status = 'aprovado';
+-- Calcular receita mensal de assinaturas ativas
+-- SELECT SUM(valor) as receita_mensal FROM assinaturas WHERE status = 'ativa';
 
--- Buscar pagamentos pendentes que expiram em breve
--- SELECT * FROM pagamentos WHERE status = 'pendente' AND expira_em < DATE_ADD(NOW(), INTERVAL 10 MINUTE);
+-- Buscar assinaturas que vencem em breve
+-- SELECT * FROM assinaturas WHERE status = 'ativa' AND proxima_cobranca < DATE_ADD(NOW(), INTERVAL 7 DAY);
 
--- Buscar reembolsos
--- SELECT * FROM pagamentos WHERE status = 'reembolsado';
+-- Buscar assinaturas canceladas no último mês
+-- SELECT * FROM assinaturas WHERE status = 'cancelada' AND cancelado_em >= DATE_SUB(NOW(), INTERVAL 30 DAY);
+
+-- Atualizar status de uma assinatura
+-- UPDATE assinaturas SET status = 'cancelada', cancelado_em = NOW() WHERE id = 1;
+
+-- Renovar assinatura
+-- UPDATE assinaturas SET proxima_cobranca = DATE_ADD(NOW(), INTERVAL 30 DAY) WHERE id = 1;
 
 -- ============================================
 -- VIEWS
 -- ============================================
 
--- View de pagamentos com informações do usuário
-CREATE OR REPLACE VIEW vw_pagamentos_detalhados AS
+-- View de assinaturas com informações do usuário
+CREATE OR REPLACE VIEW vw_assinaturas_detalhadas AS
 SELECT 
-    pg.id,
-    pg.pedido_id,
-    pg.usuario_id,
+    a.id,
+    a.usuario_id,
     u.nome as nome_usuario,
     u.email as email_usuario,
-    pg.assinatura_id,
-    pg.valor,
-    pg.metodo,
-    pg.status,
-    pg.codigo_pix,
-    pg.codigo_boleto,
-    pg.expira_em,
-    pg.reembolsado_em,
-    pg.criado_em,
-    pg.atualizado_em
-FROM pagamentos pg
-JOIN usuarios u ON pg.usuario_id = u.id;
+    a.plano,
+    p.nome as nome_plano,
+    a.valor,
+    a.status,
+    a.metodo_pagamento,
+    a.inicio,
+    a.proxima_cobranca,
+    a.cancelado_em,
+    a.criado_em
+FROM assinaturas a
+JOIN usuarios u ON a.usuario_id = u.id
+LEFT JOIN planos p ON a.plano = p.id;
 
--- View de receita por método
-CREATE OR REPLACE VIEW vw_receita_por_metodo AS
+-- View de receita por plano
+CREATE OR REPLACE VIEW vw_receita_por_plano AS
 SELECT 
-    metodo,
-    COUNT(*) as total_pagamentos,
-    SUM(CASE WHEN status = 'aprovado' THEN valor ELSE 0 END) as receita_aprovada,
-    SUM(CASE WHEN status = 'pendente' THEN valor ELSE 0 END) as receita_pendente,
-    SUM(CASE WHEN status = 'reembolsado' THEN valor ELSE 0 END) as total_reembolsado
-FROM pagamentos
-GROUP BY metodo;
+    plano,
+    COUNT(*) as total_assinaturas,
+    COUNT(CASE WHEN status = 'ativa' THEN 1 END) as assinaturas_ativas,
+    SUM(CASE WHEN status = 'ativa' THEN valor ELSE 0 END) as receita_mensal
+FROM assinaturas
+GROUP BY plano;
 
--- View de pagamentos por dia
-CREATE OR REPLACE VIEW vw_pagamentos_diarios AS
+-- View de renovações próximas
+CREATE OR REPLACE VIEW vw_renovacoes_proximas AS
 SELECT 
-    DATE(criado_em) as data,
-    COUNT(*) as total_pagamentos,
-    SUM(CASE WHEN status = 'aprovado' THEN valor ELSE 0 END) as receita_total,
-    COUNT(CASE WHEN status = 'aprovado' THEN 1 END) as pagamentos_aprovados,
-    COUNT(CASE WHEN status = 'falhou' THEN 1 END) as pagamentos_falhos
-FROM pagamentos
-GROUP BY DATE(criado_em);
+    a.id,
+    a.usuario_id,
+    u.nome as nome_usuario,
+    u.email as email_usuario,
+    a.plano,
+    a.valor,
+    a.proxima_cobranca,
+    DATEDIFF(a.proxima_cobranca, NOW()) as dias_restantes
+FROM assinaturas a
+JOIN usuarios u ON a.usuario_id = u.id
+WHERE a.status = 'ativa'
+AND DATEDIFF(a.proxima_cobranca, NOW()) <= 7;
 
 -- ============================================
 -- ÍNDICES ADICIONAIS
 -- ============================================
 
--- Índice para busca de pagamentos por período
-CREATE INDEX idx_pagamentos_periodo ON pagamentos(criado_em DESC);
+-- Índice para busca combinada
+CREATE INDEX idx_status_plano ON assinaturas(status, plano);
 
--- Índice para busca combinada de status e método
-CREATE INDEX idx_status_metodo ON pagamentos(status, metodo);
-
--- Índice para busca de pagamentos expirando
-CREATE INDEX idx_pagamentos_expira ON pagamentos(status, expira_em);
+-- Índice para busca de renovações
+CREATE INDEX idx_renovacao ON assinaturas(status, proxima_cobranca);
 
 -- ============================================
 -- TRIGGERS
 -- ============================================
 
--- Trigger para atualizar status do pedido quando pagamento é aprovado
+-- Trigger para atualizar plano do usuário quando assinatura muda
 DELIMITER //
-CREATE TRIGGER trg_pagamento_aprovado
-AFTER UPDATE ON pagamentos
+CREATE TRIGGER trg_assinatura_atualizada
+AFTER UPDATE ON assinaturas
 FOR EACH ROW
 BEGIN
-    IF NEW.status = 'aprovado' AND OLD.status != 'aprovado' THEN
-        UPDATE pedidos SET status = 'pago' WHERE id = NEW.pedido_id;
-    END IF;
-    
-    IF NEW.status = 'reembolsado' AND OLD.status != 'reembolsado' THEN
-        UPDATE pedidos SET status = 'cancelado' WHERE id = NEW.pedido_id;
+    IF NEW.status != OLD.status OR NEW.plano != OLD.plano THEN
+        IF NEW.status = 'ativa' THEN
+            UPDATE usuarios SET plano = NEW.plano WHERE id = NEW.usuario_id;
+        ELSEIF NEW.status IN ('cancelada', 'expirada') THEN
+            UPDATE usuarios SET plano = 'gratuito' WHERE id = NEW.usuario_id;
+        END IF;
     END IF;
 END//
 DELIMITER ;
 
--- Trigger para atualizar status do pedido quando pagamento falha
+-- Trigger para registrar cancelamento
 DELIMITER //
-CREATE TRIGGER trg_pagamento_falhou
-AFTER UPDATE ON pagamentos
+CREATE TRIGGER trg_assinatura_cancelada
+BEFORE UPDATE ON assinaturas
 FOR EACH ROW
 BEGIN
-    IF NEW.status = 'falhou' AND OLD.status != 'falhou' THEN
-        UPDATE pedidos SET status = 'pendente' WHERE id = NEW.pedido_id;
+    IF NEW.status = 'cancelada' AND OLD.status != 'cancelada' THEN
+        SET NEW.cancelado_em = NOW();
     END IF;
 END//
 DELIMITER ;
