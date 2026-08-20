@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Assinatura Vencendo | StreamPremium</title>
+    <style>
+        :root {
+            --radius-card: 28px;
+            --radius-btn: 14px;
+            --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --font-sans: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ========== TEMA PRETO ========== */
+        body[data-theme="dark"] {
+            --bg-page: #0a0a0a;
+            --bg-card: #111111;
+            --bg-field: #1a1a1a;
+            --border-field: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a1a1a1;
+            --text-btn: #000000;
+            --bg-btn: #ffffff;
+            --bg-btn-hover: #e6e6e6;
+            --text-link: #f5f5f5;
+            --border-mix: #2a2a2a;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+            --warning-color: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --success-color: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --info-color: #3b82f6;
+            --info-bg: rgba(59, 130, 246, 0.1);
+            --danger-color: #ef4444;
+        }
+
+        /* ========== TEMA BRANCO ========== */
+        body[data-theme="light"] {
+            --bg-page: #fafafa;
+            --bg-card: #ffffff;
+            --bg-field: #f5f5f5;
+            --border-field: #e4e4e4;
+            --text-primary: #171717;
+            --text-secondary: #555555;
+            --text-btn: #ffffff;
+            --bg-btn: #171717;
+            --bg-btn-hover: #2c2c2c;
+            --text-link: #171717;
+            --border-mix: #e4e4e4;
+            --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08);
+            --warning-color: #d97706;
+            --warning-bg: rgba(217, 119, 6, 0.08);
+            --success-color: #059669;
+            --success-bg: rgba(5, 150, 105, 0.08);
+            --info-color: #2563eb;
+            --info-bg: rgba(37, 99, 235, 0.06);
+            --danger-color: #dc2626;
+        }
+
+        /* ========== TEMA SISTEMA ========== */
+        @media (prefers-color-scheme: light) {
+            body[data-theme="system"] {
+                --bg-page: #fafafa;
+                --bg-card: #ffffff;
+                --bg-field: #f5f5f5;
+                --border-field: #e4e4e4;
+                --text-primary: #171717;
+                --text-secondary: #555555;
+                --text-btn: #ffffff;
+                --bg-btn: #171717;
+                --bg-btn-hover: #2c2c2c;
+                --text-link: #171717;
+                --border-mix: #e4e4e4;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08);
+                --warning-color: #d97706;
+                --warning-bg: rgba(217, 119, 6, 0.08);
+                --success-color: #059669;
+                --success-bg: rgba(5, 150, 105, 0.08);
+                --info-color: #2563eb;
+                --info-bg: rgba(37, 99, 235, 0.06);
+                --danger-color: #dc2626;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body[data-theme="system"] {
+                --bg-page: #0a0a0a;
+                --bg-card: #111111;
+                --bg-field: #1a1a1a;
+                --border-field: #2a2a2a;
+                --text-primary: #f5f5f5;
+                --text-secondary: #a1a1a1;
+                --text-btn: #000000;
+                --bg-btn: #ffffff;
+                --bg-btn-hover: #e6e6e6;
+                --text-link: #f5f5f5;
+                --border-mix: #2a2a2a;
+                --shadow-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+                --warning-color: #f59e0b;
+                --warning-bg: rgba(245, 158, 11, 0.1);
+                --success-color: #10b981;
+                --success-bg: rgba(16, 185, 129, 0.1);
+                --info-color: #3b82f6;
+                --info-bg: rgba(59, 130, 246, 0.1);
+                --danger-color: #ef4444;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+            transition: background-color 0.35s ease, color 0.25s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseWarning {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 0 0 20px rgba(245, 158, 11, 0);
+            }
+        }
+
+        .subscription-wrapper {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 0.4rem;
+            border: 1px solid var(--border-mix);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            animation: fadeInUp 0.5s ease 0.1s forwards;
+        }
+
+        .theme-option {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .theme-option:hover {
+            color: var(--text-primary);
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+        .theme-option.active {
+            background-color: var(--bg-btn);
+            color: var(--text-btn);
+            font-weight: 600;
+        }
+
+        .theme-icon {
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 2.5rem 2rem;
+            border: 1px solid var(--border-mix);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+        }
+
+        .warning-icon-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--warning-bg);
+            border: 3px solid var(--warning-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.8rem;
+            animation: pulseWarning 2s ease-in-out infinite;
+        }
+
+        .warning-icon {
+            font-size: 2.5rem;
+        }
+
+        .warning-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--warning-color);
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+
+        .warning-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .subscription-info {
+            background: var(--bg-field);
+            border: 1px solid var(--border-mix);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .plan-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .plan-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .info-row:not(:last-child) {
+            border-bottom: 1px solid var(--border-mix);
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .dias-restantes {
+            display: inline-block;
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-color);
+            border-radius: 20px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--warning-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--bg-btn);
+            color: var(--text-btn);
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary:hover {
+            background: var(--bg-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-mix);
+            border-radius: var(--radius-btn);
+            padding: 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-field);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-danger {
+            width: 100%;
+            background: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            border-radius: var(--radius-btn);
+            padding: 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: var(--danger-color);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 24px;
+            }
+            .warning-title {
+                font-size: 1.5rem;
+            }
+            .warning-icon-container {
+                width: 70px;
+                height: 70px;
+            }
+            .warning-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <div class="subscription-wrapper">
+        <!-- Seletor de tema -->
+        <div class="theme-selector">
+            <button class="theme-option" data-theme-option="dark" type="button">
+                <span class="theme-icon">🌙</span> Preto
+            </button>
+            <button class="theme-option" data-theme-option="light" type="button">
+                <span class="theme-icon">☀️</span> Branco
+            </button>
+            <button class="theme-option active" data-theme-option="system" type="button">
+                <span class="theme-icon">💻</span> Sistema
+            </button>
+        </div>
+
+        <!-- Card -->
+        <div class="card">
+            <!-- Ícone de aviso -->
+            <div class="warning-icon-container">
+                <span class="warning-icon">⚠️</span>
+            </div>
+
+            <!-- Título -->
+            <h1 class="warning-title">Assinatura vencendo!</h1>
+            <p class="warning-subtitle">
+                Sua assinatura expira em breve.<br>
+                Renove para não perder o acesso ao conteúdo.
+            </p>
+
+            <!-- Dias restantes -->
+            <span class="dias-restantes" id="diasRestantes">⏳ 3 dias restantes</span>
+
+            <!-- Informações da assinatura -->
+            <div class="subscription-info">
+                <p class="plan-name">Plano Premium</p>
+                <p class="plan-price">R$ 29,90 <span>/mês</span></p>
+                
+                <div class="info-row">
+                    <span class="info-label">Início da assinatura</span>
+                    <span class="info-value">15/01/2024</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Vencimento</span>
+                    <span class="info-value" style="color: var(--warning-color); font-weight: 700;">18/12/2024</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status</span>
+                    <span class="info-value" style="color: var(--warning-color);">Vencendo</span>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <button class="btn-primary" id="btnRenew">
+                🔄 Renovar assinatura
+            </button>
+            <a href="minhas-assinaturas.html" class="btn-secondary">
+                💎 Gerenciar assinaturas
+            </a>
+            <button class="btn-danger" id="btnCancel">
+                ✗ Cancelar assinatura
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ========== GERENCIAMENTO DE TEMA ==========
+            const body = document.body;
+            const themeButtons = document.querySelectorAll('.theme-option');
+            const THEME_KEY = 'streampremium_theme';
+
+            function getTemaSalvo() {
+                try {
+                    return localStorage.getItem(THEME_KEY) || 'system';
+                } catch (e) {
+                    return 'system';
+                }
+            }
+
+            function aplicarTema(tema) {
+                body.setAttribute('data-theme', tema);
+                themeButtons.forEach(btn => {
+                    const btnTema = btn.getAttribute('data-theme-option');
+                    if (btnTema === tema) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                try {
+                    localStorage.setItem(THEME_KEY, tema);
+                } catch (e) {
+                    // localStorage indisponível
+                }
+            }
+
+            aplicarTema(getTemaSalvo());
+
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    aplicarTema(this.getAttribute('data-theme-option'));
+                });
+            });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleSystemChange = function() {
+                    if (getTemaSalvo() === 'system') {
+                        aplicarTema('system');
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleSystemChange);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(handleSystemChange);
+                }
+            }
+
+            // ========== RENOVAR ASSINATURA ==========
+            document.getElementById('btnRenew').addEventListener('click', function() {
+                this.textContent = '🔄 Processando...';
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                
+                setTimeout(() => {
+                    this.textContent = '✓ Assinatura renovada!';
+                    this.style.backgroundColor = 'var(--success-color)';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'minhas-assinaturas.html';
+                    }, 1500);
+                }, 2000);
+            });
+
+            // ========== CANCELAR ASSINATURA ==========
+            document.getElementById('btnCancel').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja cancelar sua assinatura?')) {
+                    if (confirm('Ao cancelar, você perderá o acesso aos benefícios Premium. Continuar?')) {
+                        alert('Assinatura cancelada com sucesso.');
+                        window.location.href = 'minhas-assinaturas.html';
+                    }
+                }
+            });
+
+            // ========== CALCULAR DIAS RESTANTES ==========
+            function calcularDiasRestantes() {
+                const dataVencimento = new Date('2024-12-18');
+                const hoje = new Date();
+                const diff = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+                
+                if (diff > 0) {
+                    document.getElementById('diasRestantes').textContent = `⏳ ${diff} ${diff === 1 ? 'dia restante' : 'dias restantes'}`;
+                } else if (diff === 0) {
+                    document.getElementById('diasRestantes').textContent = '⚠️ Expira hoje!';
+                } else {
+                    document.getElementById('diasRestantes').textContent = '❌ Assinatura expirada';
+                    document.getElementById('diasRestantes').style.borderColor = '#ef4444';
+                    document.getElementById('diasRestantes').style.color = '#ef4444';
+                }
+            }
+
+            // ========== INICIALIZAR ==========
+            calcularDiasRestantes();
+        })();
+    </script>
+</body>
+</html>
