@@ -1,0 +1,331 @@
+/* ============================================
+   STREAMPREMIUM - TEMAS (CLARO E ESCURO)
+   ============================================ */
+
+/* ========== TEMA CLARO (PADRÃO) ========== */
+:root {
+    /* Cores de fundo */
+    --bg-pagina: #fafafa;
+    --bg-card: #ffffff;
+    --bg-campo: #f5f5f5;
+    --bg-campo-hover: #eeeeee;
+    --bg-overlay: rgba(255, 255, 255, 0.9);
+    
+    /* Cores de texto */
+    --texto-primario: #171717;
+    --texto-secundario: #555555;
+    --texto-placeholder: #9ca3af;
+    --texto-link: #171717;
+    
+    /* Cores de borda */
+    --borda-campo: #e4e4e4;
+    --borda-foco: #171717;
+    --borda-mix: #e4e4e4;
+    
+    /* Cores de ícone */
+    --icone-cor: #555555;
+    
+    /* Cores de botão */
+    --botao-bg: #171717;
+    --botao-bg-hover: #2c2c2c;
+    --botao-texto: #ffffff;
+    
+    /* Sombras */
+    --sombra-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 12px 24px rgba(0, 0, 0, 0.12);
+    
+    /* Cores de feedback */
+    --feedback-sucesso: #059669;
+    --feedback-erro: #dc2626;
+    --feedback-aviso: #d97706;
+    --feedback-info: #2563eb;
+    
+    /* Fundos de feedback */
+    --feedback-sucesso-bg: rgba(5, 150, 105, 0.08);
+    --feedback-erro-bg: rgba(220, 38, 38, 0.06);
+    --feedback-aviso-bg: rgba(217, 119, 6, 0.08);
+    --feedback-info-bg: rgba(37, 99, 235, 0.06);
+    
+    /* Cores especiais */
+    --cor-destaque: #d97706;
+    --cor-badge: rgba(0, 0, 0, 0.06);
+    --cor-gradiente: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    --cor-scrollbar: #cccccc;
+}
+
+/* ========== TEMA ESCURO ========== */
+[data-tema="escuro"] {
+    /* Cores de fundo */
+    --bg-pagina: #0a0a0a;
+    --bg-card: #111111;
+    --bg-campo: #1a1a1a;
+    --bg-campo-hover: #222222;
+    --bg-overlay: rgba(0, 0, 0, 0.8);
+    
+    /* Cores de texto */
+    --texto-primario: #f5f5f5;
+    --texto-secundario: #a1a1a1;
+    --texto-placeholder: #666666;
+    --texto-link: #f5f5f5;
+    
+    /* Cores de borda */
+    --borda-campo: #2a2a2a;
+    --borda-foco: #ffffff;
+    --borda-mix: #2a2a2a;
+    
+    /* Cores de ícone */
+    --icone-cor: #a1a1a1;
+    
+    /* Cores de botão */
+    --botao-bg: #ffffff;
+    --botao-bg-hover: #e6e6e6;
+    --botao-texto: #000000;
+    
+    /* Sombras */
+    --sombra-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+    --sombra-hover: 0 12px 28px rgba(0, 0, 0, 0.5);
+    
+    /* Cores de feedback */
+    --feedback-sucesso: #10b981;
+    --feedback-erro: #ef4444;
+    --feedback-aviso: #f59e0b;
+    --feedback-info: #3b82f6;
+    
+    /* Fundos de feedback */
+    --feedback-sucesso-bg: rgba(16, 185, 129, 0.1);
+    --feedback-erro-bg: rgba(239, 68, 68, 0.1);
+    --feedback-aviso-bg: rgba(245, 158, 11, 0.1);
+    --feedback-info-bg: rgba(59, 130, 246, 0.1);
+    
+    /* Cores especiais */
+    --cor-destaque: #f59e0b;
+    --cor-badge: rgba(255, 255, 255, 0.1);
+    --cor-gradiente: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+    --cor-scrollbar: #333333;
+}
+
+/* ========== TEMA SISTEMA (AUTO) ========== */
+@media (prefers-color-scheme: dark) {
+    [data-tema="sistema"] {
+        /* Cores de fundo */
+        --bg-pagina: #0a0a0a;
+        --bg-card: #111111;
+        --bg-campo: #1a1a1a;
+        --bg-campo-hover: #222222;
+        --bg-overlay: rgba(0, 0, 0, 0.8);
+        
+        /* Cores de texto */
+        --texto-primario: #f5f5f5;
+        --texto-secundario: #a1a1a1;
+        --texto-placeholder: #666666;
+        --texto-link: #f5f5f5;
+        
+        /* Cores de borda */
+        --borda-campo: #2a2a2a;
+        --borda-foco: #ffffff;
+        --borda-mix: #2a2a2a;
+        
+        /* Cores de ícone */
+        --icone-cor: #a1a1a1;
+        
+        /* Cores de botão */
+        --botao-bg: #ffffff;
+        --botao-bg-hover: #e6e6e6;
+        --botao-texto: #000000;
+        
+        /* Sombras */
+        --sombra-card: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+        --sombra-hover: 0 12px 28px rgba(0, 0, 0, 0.5);
+        
+        /* Cores de feedback */
+        --feedback-sucesso: #10b981;
+        --feedback-erro: #ef4444;
+        --feedback-aviso: #f59e0b;
+        --feedback-info: #3b82f6;
+        
+        /* Fundos de feedback */
+        --feedback-sucesso-bg: rgba(16, 185, 129, 0.1);
+        --feedback-erro-bg: rgba(239, 68, 68, 0.1);
+        --feedback-aviso-bg: rgba(245, 158, 11, 0.1);
+        --feedback-info-bg: rgba(59, 130, 246, 0.1);
+        
+        /* Cores especiais */
+        --cor-destaque: #f59e0b;
+        --cor-badge: rgba(255, 255, 255, 0.1);
+        --cor-gradiente: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        --cor-scrollbar: #333333;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    [data-tema="sistema"] {
+        /* Cores de fundo */
+        --bg-pagina: #fafafa;
+        --bg-card: #ffffff;
+        --bg-campo: #f5f5f5;
+        --bg-campo-hover: #eeeeee;
+        --bg-overlay: rgba(255, 255, 255, 0.9);
+        
+        /* Cores de texto */
+        --texto-primario: #171717;
+        --texto-secundario: #555555;
+        --texto-placeholder: #9ca3af;
+        --texto-link: #171717;
+        
+        /* Cores de borda */
+        --borda-campo: #e4e4e4;
+        --borda-foco: #171717;
+        --borda-mix: #e4e4e4;
+        
+        /* Cores de ícone */
+        --icone-cor: #555555;
+        
+        /* Cores de botão */
+        --botao-bg: #171717;
+        --botao-bg-hover: #2c2c2c;
+        --botao-texto: #ffffff;
+        
+        /* Sombras */
+        --sombra-card: 0 24px 48px -12px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
+        --sombra-hover: 0 12px 24px rgba(0, 0, 0, 0.12);
+        
+        /* Cores de feedback */
+        --feedback-sucesso: #059669;
+        --feedback-erro: #dc2626;
+        --feedback-aviso: #d97706;
+        --feedback-info: #2563eb;
+        
+        /* Fundos de feedback */
+        --feedback-sucesso-bg: rgba(5, 150, 105, 0.08);
+        --feedback-erro-bg: rgba(220, 38, 38, 0.06);
+        --feedback-aviso-bg: rgba(217, 119, 6, 0.08);
+        --feedback-info-bg: rgba(37, 99, 235, 0.06);
+        
+        /* Cores especiais */
+        --cor-destaque: #d97706;
+        --cor-badge: rgba(0, 0, 0, 0.06);
+        --cor-gradiente: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+        --cor-scrollbar: #cccccc;
+    }
+}
+
+/* ========== APLICAÇÃO DO TEMA ========== */
+body {
+    background-color: var(--bg-pagina);
+    color: var(--texto-primario);
+    transition: background-color 0.35s ease, color 0.25s ease;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-color: var(--borda-mix);
+    box-shadow: var(--sombra-card);
+}
+
+.input-campo,
+.textarea-campo,
+.select-campo {
+    background-color: var(--bg-campo);
+    border-color: var(--borda-campo);
+    color: var(--texto-primario);
+}
+
+.input-campo:hover,
+.textarea-campo:hover,
+.select-campo:hover {
+    background-color: var(--bg-campo-hover);
+}
+
+.input-campo:focus,
+.textarea-campo:focus,
+.select-campo:focus {
+    border-color: var(--borda-foco);
+}
+
+.btn-primario {
+    background-color: var(--botao-bg);
+    color: var(--botao-texto);
+}
+
+.btn-primario:hover {
+    background-color: var(--botao-bg-hover);
+}
+
+.texto-secundario {
+    color: var(--texto-secundario);
+}
+
+/* ========== UTILITÁRIOS DE TEMA ========== */
+.tema-claro {
+    color-scheme: light;
+}
+
+.tema-escuro {
+    color-scheme: dark;
+}
+
+/* ========== ANIMAÇÃO DE TRANSIÇÃO ========== */
+.transicao-tema {
+    transition: background-color 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--cor-scrollbar);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--texto-secundario);
+}
+
+/* ========== SELEÇÃO DE TEXTO ========== */
+::selection {
+    background: var(--cor-destaque);
+    color: var(--texto-primario);
+}
+
+/* ========== ESTILOS ESPECÍFICOS POR TEMA ========== */
+
+/* Tema Claro - Elementos específicos */
+[data-tema="claro"] .header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--borda-mix);
+}
+
+/* Tema Escuro - Elementos específicos */
+[data-tema="escuro"] .header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--borda-mix);
+    backdrop-filter: blur(12px);
+}
+
+/* ========== RESPONSIVO ========== */
+@media (max-width: 768px) {
+    :root {
+        --sombra-card: 0 16px 32px -8px rgba(0, 0, 0, 0.08);
+    }
+    
+    [data-tema="escuro"] {
+        --sombra-card: 0 16px 32px -8px rgba(0, 0, 0, 0.7);
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --sombra-card: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+    }
+    
+    [data-tema="escuro"] {
+        --sombra-card: 0 8px 16px -4px rgba(0, 0, 0, 0.7);
+    }
+}
