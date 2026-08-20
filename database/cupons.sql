@@ -1,114 +1,168 @@
 -- ============================================
--- STREAMPREMIUM - TABELA DE CÓDIGOS DE VERIFICAÇÃO
+-- STREAMPREMIUM - TABELA DE CUPONS
 -- ============================================
 
 -- Usar banco de dados
 USE streampremium;
 
 -- ============================================
--- CRIAÇÃO DA TABELA DE CÓDIGOS DE VERIFICAÇÃO
+-- CRIAÇÃO DA TABELA DE CUPONS
 -- ============================================
-CREATE TABLE IF NOT EXISTS codigos_verificacao (
+CREATE TABLE IF NOT EXISTS cupons (
     -- Identificação
     id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id INT,
-    email VARCHAR(255),
+    codigo VARCHAR(50) NOT NULL UNIQUE,
     
-    -- Código
-    codigo VARCHAR(10) NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
+    -- Tipo e valor
+    tipo VARCHAR(20) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    
+    -- Uso
+    usos INT DEFAULT 0,
+    maximo_usos INT DEFAULT 100,
     
     -- Status
-    usado BOOLEAN DEFAULT FALSE,
+    status VARCHAR(20) DEFAULT 'ativo',
     
     -- Datas
-    expira_em TIMESTAMP NOT NULL,
+    validade TIMESTAMP NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    usado_em TIMESTAMP NULL,
-    
-    -- Chaves estrangeiras
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     -- Índices
-    INDEX idx_codigo (codigo),
-    INDEX idx_email_verificacao (email),
-    INDEX idx_usuario_verificacao (usuario_id),
-    INDEX idx_tipo_verificacao (tipo),
-    INDEX idx_expiracao (expira_em),
-    INDEX idx_status_uso (usado)
+    INDEX idx_codigo_cupom (codigo),
+    INDEX idx_status_cupom (status),
+    INDEX idx_validade (validade),
+    INDEX idx_tipo_cupom (tipo)
 ) ENGINE=InnoDB;
 
 -- ============================================
--- INSERÇÃO DE CÓDIGOS DE EXEMPLO
+-- INSERÇÃO DE CUPONS DE EXEMPLO
 -- ============================================
 
--- Código de verificação de e-mail para João (id=1)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(1, 'joao.silva@email.com', '123456', 'verificacao_email', DATE_ADD(NOW(), INTERVAL 30 MINUTE));
+-- Cupom de boas-vindas (10% de desconto)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('BEMVINDO10', 'porcentagem', 10.00, 245, 500, '2025-12-31 23:59:59', 'ativo');
 
--- Código de recuperação de senha para Maria (id=2)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(2, 'maria.oliveira@email.com', 'ABCD1234', 'recuperacao_senha', DATE_ADD(NOW(), INTERVAL 1 HOUR));
+-- Cupom Premium (20% de desconto)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('PREMIUM20', 'porcentagem', 20.00, 189, 300, '2025-06-30 23:59:59', 'ativo');
 
--- Código de verificação de e-mail para Pedro (id=3)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(3, 'pedro.santos@email.com', '987654', 'verificacao_email', DATE_ADD(NOW(), INTERVAL 30 MINUTE));
+-- Cupom de frete grátis (valor fixo)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('FRETE50', 'valor_fixo', 50.00, 87, 100, '2024-12-15 23:59:59', 'ativo');
 
--- Código de verificação de dispositivo para Ana (id=4)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(4, 'ana.costa@email.com', 'DEV123456', 'verificacao_dispositivo', DATE_ADD(NOW(), INTERVAL 15 MINUTE));
+-- Cupom Black Friday (30% de desconto) - Expirado
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('BLACKFRIDAY', 'porcentagem', 30.00, 567, 1000, '2024-11-30 23:59:59', 'expirado');
 
--- Código de recuperação de senha para Carlos (id=5)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(5, 'carlos.pereira@email.com', 'EFGH5678', 'recuperacao_senha', DATE_ADD(NOW(), INTERVAL 1 HOUR));
+-- Cupom de aniversário (15% de desconto) - Inativo
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('ANIVERSARIO', 'porcentagem', 15.00, 0, 200, '2025-03-31 23:59:59', 'inativo');
 
--- Código de verificação de e-mail para Juliana (id=6) - Já usado
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, usado, expira_em, usado_em) VALUES
-(6, 'juliana.almeida@email.com', '456789', 'verificacao_email', TRUE, DATE_ADD(NOW(), INTERVAL -10 MINUTE), NOW());
+-- Cupom Stream (25% de desconto)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('STREAM25', 'porcentagem', 25.00, 312, 500, '2025-02-28 23:59:59', 'ativo');
 
--- Código de verificação de e-mail para Roberto (id=7) - Expirado
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(7, 'roberto.nunes@email.com', '789123', 'verificacao_email', DATE_ADD(NOW(), INTERVAL -5 MINUTE));
+-- Cupom de Natal (valor fixo)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('NATAL20', 'valor_fixo', 20.00, 45, 150, '2024-12-25 23:59:59', 'ativo');
 
--- Código de recuperação de senha para Fernanda (id=8)
-INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em) VALUES
-(8, 'fernanda.lima@email.com', 'IJKL9012', 'recuperacao_senha', DATE_ADD(NOW(), INTERVAL 1 HOUR));
+-- Cupom de Ano Novo (40% de desconto)
+INSERT INTO cupons (codigo, tipo, valor, usos, maximo_usos, validade, status) VALUES
+('ANONOVO40', 'porcentagem', 40.00, 0, 300, '2025-01-05 23:59:59', 'ativo');
+
+-- ============================================
+-- TABELA DE USO DE CUPONS
+-- ============================================
+CREATE TABLE IF NOT EXISTS cupom_usos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cupom_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    pedido_id INT,
+    valor_desconto DECIMAL(10,2) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cupom_id) REFERENCES cupons(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE SET NULL,
+    INDEX idx_cupom_uso (cupom_id),
+    INDEX idx_usuario_uso (usuario_id),
+    INDEX idx_pedido_uso (pedido_id)
+) ENGINE=InnoDB;
+
+-- ============================================
+-- INSERÇÃO DE USOS DE CUPONS
+-- ============================================
+
+-- João usou BEMVINDO10
+INSERT INTO cupom_usos (cupom_id, usuario_id, pedido_id, valor_desconto) VALUES
+(1, 1, 1, 4.98);
+
+-- Maria usou PREMIUM20
+INSERT INTO cupom_usos (cupom_id, usuario_id, pedido_id, valor_desconto) VALUES
+(2, 2, 2, 9.98);
+
+-- Pedro usou STREAM25
+INSERT INTO cupom_usos (cupom_id, usuario_id, pedido_id, valor_desconto) VALUES
+(6, 3, 3, 6.23);
+
+-- Roberto usou FRETE50
+INSERT INTO cupom_usos (cupom_id, usuario_id, pedido_id, valor_desconto) VALUES
+(3, 7, 7, 4.49);
 
 -- ============================================
 -- FUNÇÕES AUXILIARES
 -- ============================================
 
--- Função para gerar código de verificação
+-- Função para verificar se cupom é válido
 DELIMITER //
-CREATE FUNCTION gerar_codigo_verificacao()
-RETURNS VARCHAR(6)
-DETERMINISTIC
-BEGIN
-    RETURN LPAD(FLOOR(RAND() * 1000000), 6, '0');
-END//
-DELIMITER ;
-
--- Função para verificar se código é válido
-DELIMITER //
-CREATE FUNCTION verificar_codigo_valido(
-    p_email VARCHAR(255),
-    p_codigo VARCHAR(10),
-    p_tipo VARCHAR(50)
+CREATE FUNCTION verificar_cupom_valido(
+    p_codigo VARCHAR(50)
 )
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-    DECLARE codigo_valido BOOLEAN;
+    DECLARE cupom_valido BOOLEAN;
     
-    SELECT COUNT(*) > 0 INTO codigo_valido
-    FROM codigos_verificacao
-    WHERE email = p_email
-    AND codigo = p_codigo
-    AND tipo = p_tipo
-    AND usado = FALSE
-    AND expira_em > NOW();
+    SELECT COUNT(*) > 0 INTO cupom_valido
+    FROM cupons
+    WHERE codigo = UPPER(p_codigo)
+    AND status = 'ativo'
+    AND validade > NOW()
+    AND usos < maximo_usos;
     
-    RETURN codigo_valido;
+    RETURN cupom_valido;
+END//
+DELIMITER ;
+
+-- Função para calcular desconto
+DELIMITER //
+CREATE FUNCTION calcular_desconto_cupom(
+    p_codigo VARCHAR(50),
+    p_valor_compra DECIMAL(10,2)
+)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE v_tipo VARCHAR(20);
+    DECLARE v_valor DECIMAL(10,2);
+    DECLARE v_desconto DECIMAL(10,2);
+    
+    SELECT tipo, valor INTO v_tipo, v_valor
+    FROM cupons
+    WHERE codigo = UPPER(p_codigo)
+    AND status = 'ativo'
+    AND validade > NOW()
+    AND usos < maximo_usos
+    LIMIT 1;
+    
+    IF v_tipo = 'porcentagem' THEN
+        SET v_desconto = p_valor_compra * (v_valor / 100);
+    ELSE
+        SET v_desconto = v_valor;
+    END IF;
+    
+    RETURN COALESCE(v_desconto, 0);
 END//
 DELIMITER ;
 
@@ -116,87 +170,77 @@ DELIMITER ;
 -- PROCEDURES
 -- ============================================
 
--- Procedure para gerar novo código de verificação
+-- Procedure para criar novo cupom
 DELIMITER //
-CREATE PROCEDURE gerar_novo_codigo(
-    IN p_usuario_id INT,
-    IN p_email VARCHAR(255),
-    IN p_tipo VARCHAR(50),
-    IN p_minutos_expiracao INT
+CREATE PROCEDURE criar_novo_cupom(
+    IN p_codigo VARCHAR(50),
+    IN p_tipo VARCHAR(20),
+    IN p_valor DECIMAL(10,2),
+    IN p_maximo_usos INT,
+    IN p_dias_validade INT
 )
 BEGIN
-    DECLARE v_codigo VARCHAR(10);
+    INSERT INTO cupons (codigo, tipo, valor, maximo_usos, validade, status)
+    VALUES (
+        UPPER(p_codigo),
+        p_tipo,
+        p_valor,
+        p_maximo_usos,
+        DATE_ADD(NOW(), INTERVAL p_dias_validade DAY),
+        'ativo'
+    );
     
-    -- Gerar código baseado no tipo
-    IF p_tipo = 'verificacao_email' THEN
-        SET v_codigo = LPAD(FLOOR(RAND() * 1000000), 6, '0');
-    ELSEIF p_tipo = 'recuperacao_senha' THEN
-        SET v_codigo = CONCAT(
-            SUBSTRING(MD5(RAND()), 1, 4),
-            SUBSTRING(MD5(RAND()), 1, 4)
-        );
-    ELSE
-        SET v_codigo = CONCAT('DEV', LPAD(FLOOR(RAND() * 1000000), 6, '0'));
-    END IF;
-    
-    -- Invalidar códigos anteriores do mesmo tipo
-    UPDATE codigos_verificacao
-    SET usado = TRUE, usado_em = NOW()
-    WHERE usuario_id = p_usuario_id
-    AND tipo = p_tipo
-    AND usado = FALSE;
-    
-    -- Inserir novo código
-    INSERT INTO codigos_verificacao (usuario_id, email, codigo, tipo, expira_em)
-    VALUES (p_usuario_id, p_email, v_codigo, p_tipo, DATE_ADD(NOW(), INTERVAL p_minutos_expiracao MINUTE));
-    
-    -- Retornar o código gerado
-    SELECT v_codigo as codigo_gerado;
+    SELECT LAST_INSERT_ID() as cupom_id;
 END//
 DELIMITER ;
 
--- Procedure para usar código de verificação
+-- Procedure para usar cupom
 DELIMITER //
-CREATE PROCEDURE usar_codigo_verificacao(
-    IN p_email VARCHAR(255),
-    IN p_codigo VARCHAR(10),
-    IN p_tipo VARCHAR(50)
+CREATE PROCEDURE usar_cupom(
+    IN p_codigo VARCHAR(50),
+    IN p_usuario_id INT,
+    IN p_pedido_id INT,
+    IN p_valor_compra DECIMAL(10,2)
 )
 BEGIN
-    DECLARE v_codigo_id INT;
+    DECLARE v_cupom_id INT;
+    DECLARE v_valor_desconto DECIMAL(10,2);
     
-    -- Buscar código válido
-    SELECT id INTO v_codigo_id
-    FROM codigos_verificacao
-    WHERE email = p_email
-    AND codigo = p_codigo
-    AND tipo = p_tipo
-    AND usado = FALSE
-    AND expira_em > NOW()
+    -- Buscar cupom válido
+    SELECT id INTO v_cupom_id
+    FROM cupons
+    WHERE codigo = UPPER(p_codigo)
+    AND status = 'ativo'
+    AND validade > NOW()
+    AND usos < maximo_usos
     LIMIT 1;
     
-    IF v_codigo_id IS NOT NULL THEN
-        -- Marcar como usado
-        UPDATE codigos_verificacao
-        SET usado = TRUE, usado_em = NOW()
-        WHERE id = v_codigo_id;
+    IF v_cupom_id IS NOT NULL THEN
+        -- Calcular desconto
+        SET v_valor_desconto = calcular_desconto_cupom(p_codigo, p_valor_compra);
         
-        SELECT TRUE as sucesso, 'Código validado com sucesso' as mensagem;
+        -- Registrar uso
+        INSERT INTO cupom_usos (cupom_id, usuario_id, pedido_id, valor_desconto)
+        VALUES (v_cupom_id, p_usuario_id, p_pedido_id, v_valor_desconto);
+        
+        -- Incrementar contador
+        UPDATE cupons SET usos = usos + 1 WHERE id = v_cupom_id;
+        
+        SELECT TRUE as sucesso, v_valor_desconto as desconto, 'Cupom aplicado com sucesso' as mensagem;
     ELSE
-        SELECT FALSE as sucesso, 'Código inválido ou expirado' as mensagem;
+        SELECT FALSE as sucesso, 0 as desconto, 'Cupom inválido ou expirado' as mensagem;
     END IF;
 END//
 DELIMITER ;
 
--- Procedure para limpar códigos expirados
+-- Procedure para desativar cupom
 DELIMITER //
-CREATE PROCEDURE limpar_codigos_expirados()
+CREATE PROCEDURE desativar_cupom(
+    IN p_cupom_id INT
+)
 BEGIN
-    DELETE FROM codigos_verificacao
-    WHERE expira_em < NOW()
-    AND usado = FALSE;
-    
-    SELECT ROW_COUNT() as codigos_removidos;
+    UPDATE cupons SET status = 'inativo' WHERE id = p_cupom_id;
+    SELECT ROW_COUNT() as cupons_atualizados;
 END//
 DELIMITER ;
 
@@ -204,72 +248,79 @@ DELIMITER ;
 -- CONSULTAS ÚTEIS
 -- ============================================
 
--- Buscar códigos válidos de um usuário
--- SELECT * FROM codigos_verificacao WHERE usuario_id = 1 AND usado = FALSE AND expira_em > NOW();
+-- Buscar todos os cupons ativos
+-- SELECT * FROM cupons WHERE status = 'ativo' AND validade > NOW();
 
--- Buscar códigos por tipo
--- SELECT * FROM codigos_verificacao WHERE tipo = 'verificacao_email';
+-- Buscar cupons por tipo
+-- SELECT * FROM cupons WHERE tipo = 'porcentagem';
 
--- Buscar códigos expirados
--- SELECT * FROM codigos_verificacao WHERE expira_em < NOW() AND usado = FALSE;
+-- Buscar cupons mais usados
+-- SELECT * FROM cupons ORDER BY usos DESC;
 
--- Contar códigos gerados por dia
--- SELECT DATE(criado_em) as data, COUNT(*) as total FROM codigos_verificacao GROUP BY DATE(criado_em);
+-- Buscar cupons que expiram em breve
+-- SELECT * FROM cupons WHERE validade < DATE_ADD(NOW(), INTERVAL 7 DAY) AND status = 'ativo';
+
+-- Verificar uso de cupom por usuário
+-- SELECT * FROM cupom_usos WHERE usuario_id = 1;
 
 -- ============================================
 -- VIEWS
 -- ============================================
 
--- View de códigos ativos
-CREATE OR REPLACE VIEW vw_codigos_ativos AS
+-- View de cupons ativos
+CREATE OR REPLACE VIEW vw_cupons_ativos AS
 SELECT 
-    cv.id,
-    cv.usuario_id,
-    u.nome as nome_usuario,
-    cv.email,
-    cv.codigo,
-    cv.tipo,
-    cv.expira_em,
-    cv.criado_em,
-    TIMESTAMPDIFF(MINUTE, NOW(), cv.expira_em) as minutos_restantes
-FROM codigos_verificacao cv
-LEFT JOIN usuarios u ON cv.usuario_id = u.id
-WHERE cv.usado = FALSE
-AND cv.expira_em > NOW();
+    c.id,
+    c.codigo,
+    c.tipo,
+    c.valor,
+    c.usos,
+    c.maximo_usos,
+    c.validade,
+    DATEDIFF(c.validade, NOW()) as dias_restantes,
+    ROUND((c.usos / c.maximo_usos) * 100, 2) as percentual_uso
+FROM cupons c
+WHERE c.status = 'ativo'
+AND c.validade > NOW();
 
--- View de estatísticas de códigos
-CREATE OR REPLACE VIEW vw_estatisticas_codigos AS
+-- View de estatísticas de cupons
+CREATE OR REPLACE VIEW vw_estatisticas_cupons AS
 SELECT 
-    tipo,
-    COUNT(*) as total_gerados,
-    COUNT(CASE WHEN usado = TRUE THEN 1 END) as total_usados,
-    COUNT(CASE WHEN usado = FALSE AND expira_em < NOW() THEN 1 END) as total_expirados,
-    COUNT(CASE WHEN usado = FALSE AND expira_em > NOW() THEN 1 END) as total_ativos
-FROM codigos_verificacao
-GROUP BY tipo;
+    c.id,
+    c.codigo,
+    c.tipo,
+    c.valor,
+    c.usos,
+    c.maximo_usos,
+    COUNT(cu.id) as total_usos_registrados,
+    SUM(cu.valor_desconto) as total_desconto_gerado
+FROM cupons c
+LEFT JOIN cupom_usos cu ON c.id = cu.cupom_id
+GROUP BY c.id;
 
 -- ============================================
 -- ÍNDICES ADICIONAIS
 -- ============================================
 
 -- Índice para busca combinada
-CREATE INDEX idx_email_tipo ON codigos_verificacao(email, tipo);
+CREATE INDEX idx_status_validade ON cupons(status, validade);
 
--- Índice para busca de códigos ativos
-CREATE INDEX idx_codigos_ativos ON codigos_verificacao(usado, expira_em);
+-- Índice para busca de código
+CREATE INDEX idx_codigo_busca ON cupons(codigo);
 
 -- ============================================
--- EVENTOS (Limpeza automática)
+-- EVENTOS (Desativação automática)
 -- ============================================
 
--- Evento para limpar códigos expirados a cada hora
+-- Evento para desativar cupons expirados diariamente
 DELIMITER //
-CREATE EVENT IF NOT EXISTS evt_limpar_codigos_expirados
-ON SCHEDULE EVERY 1 HOUR
+CREATE EVENT IF NOT EXISTS evt_desativar_cupons_expirados
+ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
-    DELETE FROM codigos_verificacao
-    WHERE expira_em < DATE_SUB(NOW(), INTERVAL 24 HOUR)
-    AND usado = FALSE;
+    UPDATE cupons
+    SET status = 'expirado'
+    WHERE status = 'ativo'
+    AND validade < NOW();
 END//
 DELIMITER ;
