@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamPremium - App Completo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .header {
+            background: #111;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #f59e0b;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #f59e0b; }
+        .logo span { color: #fff; }
+        .nav-buttons { display: flex; gap: 10px; }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #f59e0b; color: #000; }
+        .btn-secondary { background: #1a1a1a; color: #fff; border: 1px solid #2a2a2a; }
+        .btn-danger { background: #ef4444; color: #fff; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #f59e0b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+        input:focus { border-color: #f59e0b; }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a1a1a1;
+            font-size: 14px;
+        }
+        .link {
+            color: #f59e0b;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .link:hover { text-decoration: underline; }
+        .text-center { text-align: center; }
+        .mt-10 { margin-top: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+        
+        .grid-filmes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .filme-card {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filme-card:hover { border-color: #f59e0b; transform: translateY(-3px); }
+        .filme-poster { font-size: 3rem; text-align: center; margin-bottom: 10px; }
+        .filme-titulo { font-weight: bold; margin-bottom: 5px; }
+        .filme-preco { color: #f59e0b; font-weight: bold; }
+        
+        .mensagem {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .mensagem-sucesso { background: rgba(16,185,129,0.2); color: #10b981; }
+        .mensagem-erro { background: rgba(239,68,68,0.2); color: #ef4444; }
+        
+        .hidden { display: none; }
+        
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .botao-quantidade {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .quantidade-valor {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">▶ <span>STREAMPREMIUM</span></div>
+        <div class="nav-buttons" id="navButtons"></div>
+    </div>
+
+    <div class="container">
+        <!-- TELA DE LOGIN -->
+        <div id="telaLogin" class="card">
+            <h2>👤 Login</h2>
+            <div id="loginMensagem"></div>
+            <label>E-mail</label>
+            <input type="email" id="loginEmail" placeholder="seu@email.com">
+            <label>Senha</label>
+            <input type="password" id="loginSenha" placeholder="Digite sua senha">
+            <button class="btn btn-primary" style="width:100%;" onclick="fazerLogin()">Entrar</button>
+            <p class="text-center mt-10">
+                <a class="link" onclick="mostrarTela('cadastro')">Criar conta</a> | 
+                <a class="link" onclick="mostrarTela('recuperar')">Esqueci senha</a>
+            </p>
+        </div>
+
+        <!-- TELA DE CADASTRO -->
+        <div id="telaCadastro" class="card hidden">
+            <h2>📝 Cadastro</h2>
+            <div id="cadastroMensagem"></div>
+            <label>Nome completo</label>
+            <input type="text" id="cadastroNome" placeholder="Seu nome">
+            <label>E-mail</label>
+            <input type="email" id="cadastroEmail" placeholder="seu@email.com">
+            <label>Senha</label>
+            <input type="password" id="cadastroSenha" placeholder="Crie uma senha">
+            <button class="btn btn-primary" style="width:100%;" onclick="fazerCadastro()">Cadastrar</button>
+            <p class="text-center mt-10">
+                <a class="link" onclick="mostrarTela('login')">Já tem conta? Entrar</a>
+            </p>
+        </div>
+
+        <!-- TELA DE RECUPERAR SENHA -->
+        <div id="telaRecuperar" class="card hidden">
+            <h2>🔑 Recuperar Senha</h2>
+            <div id="recuperarMensagem"></div>
+            <label>E-mail</label>
+            <input type="email" id="recuperarEmail" placeholder="seu@email.com">
+            <button class="btn btn-primary" style="width:100%;" onclick="recuperarSenha()">Enviar instruções</button>
+            <p class="text-center mt-10">
+                <a class="link" onclick="mostrarTela('login')">Voltar para login</a>
+            </p>
+        </div>
+
+        <!-- TELA DO CATÁLOGO -->
+        <div id="telaCatalogo" class="hidden">
+            <div class="card">
+                <h2>🎬 Catálogo</h2>
+                <input type="text" id="buscaFilme" placeholder="🔍 Buscar filme ou série..." oninput="buscarFilmes()">
+            </div>
+            <div class="grid-filmes" id="gridFilmes"></div>
+        </div>
+
+        <!-- TELA DO CARRINHO -->
+        <div id="telaCarrinho" class="hidden">
+            <div class="card">
+                <h2>🛒 Carrinho</h2>
+                <div id="carrinhoItens"></div>
+                <div id="carrinhoTotal" style="font-size:1.2rem; font-weight:bold; text-align:right;"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="finalizarCompra()">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <!-- TELA DE PEDIDOS -->
+        <div id="telaPedidos" class="hidden">
+            <div class="card">
+                <h2>📦 Meus Pedidos</h2>
+                <div id="listaPedidos"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== BANCO DE DADOS SIMULADO ==========
+        let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+        let carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
+        let pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+
+        const filmes = [
+            { id: 1, titulo: 'Duna: Parte 2', tipo: 'Filme', preco: 29.90, genero: 'Ficção' },
+            { id: 2, titulo: 'Breaking Bad', tipo: 'Série', preco: 49.90, genero: 'Drama' },
+            { id: 3, titulo: 'Interestelar', tipo: 'Filme', preco: 19.90, genero: 'Ficção' },
+            { id: 4, titulo: 'Stranger Things', tipo: 'Série', preco: 39.90, genero: 'Terror' },
+            { id: 5, titulo: 'A Origem', tipo: 'Filme', preco: 24.90, genero: 'Ação' },
+            { id: 6, titulo: 'The Office', tipo: 'Série', preco: 34.90, genero: 'Comédia' },
+            { id: 7, titulo: 'Oppenheimer', tipo: 'Filme', preco: 24.90, genero: 'Drama' },
+            { id: 8, titulo: 'Rick and Morty', tipo: 'Série', preco: 39.90, genero: 'Animação' }
+        ];
+
+        // ========== FUNÇÕES DE TELA ==========
+        function mostrarTela(tela) {
+            document.querySelectorAll('.card, .grid-filmes').forEach(el => el.classList.add('hidden'));
+            document.getElementById('gridFilmes').classList.add('hidden');
+            
+            const telas = {
+                'login': 'telaLogin',
+                'cadastro': 'telaCadastro',
+                'recuperar': 'telaRecuperar',
+                'catalogo': 'telaCatalogo',
+                'carrinho': 'telaCarrinho',
+                'pedidos': 'telaPedidos'
+            };
+            
+            if (telas[tela]) {
+                document.getElementById(telas[tela]).classList.remove('hidden');
+            }
+            
+            if (tela === 'catalogo') {
+                document.getElementById('gridFilmes').classList.remove('hidden');
+                renderizarFilmes();
+            }
+            
+            if (tela === 'carrinho') {
+                renderizarCarrinho();
+            }
+            
+            if (tela === 'pedidos') {
+                renderizarPedidos();
+            }
+        }
+
+        // ========== ATUALIZAR NAVEGAÇÃO ==========
+        function atualizarNavegacao() {
+            const nav = document.getElementById('navButtons');
+            
+            if (usuarioLogado) {
+                nav.innerHTML = `
+                    <button class="btn btn-secondary" onclick="mostrarTela('catalogo')">🎬 Catálogo</button>
+                    <button class="btn btn-secondary" onclick="mostrarTela('carrinho')">🛒 Carrinho (${carrinho.length})</button>
+                    <button class="btn btn-secondary" onclick="mostrarTela('pedidos')">📦 Pedidos</button>
+                    <button class="btn btn-danger" onclick="sair()">Sair</button>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <button class="btn btn-primary" onclick="mostrarTela('login')">Entrar</button>
+                `;
+            }
+        }
+
+        // ========== CADASTRO ==========
+        function fazerCadastro() {
+            const nome = document.getElementById('cadastroNome').value.trim();
+            const email = document.getElementById('cadastroEmail').value.trim();
+            const senha = document.getElementById('cadastroSenha').value;
+            
+            const msg = document.getElementById('cadastroMensagem');
+            
+            if (!nome || !email || !senha) {
+                msg.innerHTML = '<div class="mensagem mensagem-erro">Preencha todos os campos!</div>';
+                return;
+            }
+            
+            if (usuarios.find(u => u.email === email)) {
+                msg.innerHTML = '<div class="mensagem mensagem-erro">E-mail já cadastrado!</div>';
+                return;
+            }
+            
+            usuarios.push({ nome, email, senha });
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            
+            msg.innerHTML = '<div class="mensagem mensagem-sucesso">Cadastro realizado! Faça login.</div>';
+            document.getElementById('cadastroNome').value = '';
+            document.getElementById('cadastroEmail').value = '';
+            document.getElementById('cadastroSenha').value = '';
+            
+            setTimeout(() => mostrarTela('login'), 1500);
+        }
+
+        // ========== LOGIN ==========
+        function fazerLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value;
+            
+            const msg = document.getElementById('loginMensagem');
+            
+            const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+            
+            if (!usuario) {
+                msg.innerHTML = '<div class="mensagem mensagem-erro">E-mail ou senha incorretos!</div>';
+                return;
+            }
+            
+            usuarioLogado = usuario;
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+            
+            msg.innerHTML = '<div class="mensagem mensagem-sucesso">Login realizado com sucesso!</div>';
+            atualizarNavegacao();
+            
+            setTimeout(() => mostrarTela('catalogo'), 1000);
+        }
+
+        // ========== RECUPERAR SENHA ==========
+        function recuperarSenha() {
+            const email = document.getElementById('recuperarEmail').value.trim();
+            const msg = document.getElementById('recuperarMensagem');
+            
+            msg.innerHTML = '<div class="mensagem mensagem-sucesso">Se o e-mail existir, enviaremos instruções!</div>';
+            document.getElementById('recuperarEmail').value = '';
+        }
+
+        // ========== SAIR ==========
+        function sair() {
+            usuarioLogado = null;
+            localStorage.removeItem('usuarioLogado');
+            atualizarNavegacao();
+            mostrarTela('login');
+        }
+
+        // ========== CATÁLOGO ==========
+        function renderizarFilmes(filtro = '') {
+            const grid = document.getElementById('gridFilmes');
+            const filmesFiltrados = filmes.filter(f => 
+                f.titulo.toLowerCase().includes(filtro.toLowerCase())
+            );
+            
+            grid.innerHTML = '';
+            
+            filmesFiltrados.forEach(filme => {
+                const card = document.createElement('div');
+                card.className = 'filme-card';
+                card.innerHTML = `
+                    <div class="filme-poster">🎬</div>
+                    <div class="filme-titulo">${filme.titulo}</div>
+                    <div>${filme.tipo} - ${filme.genero}</div>
+                    <div class="filme-preco">R$ ${filme.preco.toFixed(2)}</div>
+                    <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="adicionarAoCarrinho(${filme.id})">
+                        Adicionar ao carrinho
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function buscarFilmes() {
+            const busca = document.getElementById('buscaFilme').value;
+            renderizarFilmes(busca);
+        }
+
+        // ========== CARRINHO ==========
+        function adicionarAoCarrinho(filmeId) {
+            const filme = filmes.find(f => f.id === filmeId);
+            
+            if (!usuarioLogado) {
+                mostrarTela('login');
+                return;
+            }
+            
+            const itemExistente = carrinho.find(item => item.id === filmeId);
+            
+            if (itemExistente) {
+                itemExistente.quantidade++;
+            } else {
+                carrinho.push({ ...filme, quantidade: 1 });
+            }
+            
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarNavegacao();
+            alert(`${filme.titulo} adicionado ao carrinho!`);
+        }
+
+        function renderizarCarrinho() {
+            const container = document.getElementById('carrinhoItens');
+            const totalElemento = document.getElementById('carrinhoTotal');
+            
+            if (carrinho.length === 0) {
+                container.innerHTML = '<p class="text-center" style="color:#a1a1a1;">Carrinho vazio</p>';
+                totalElemento.textContent = '';
+                return;
+            }
+            
+            container.innerHTML = '';
+            let total = 0;
+            
+            carrinho.forEach(item => {
+                total += item.preco * item.quantidade;
+                
+                const div = document.createElement('div');
+                div.className = 'carrinho-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.titulo}</strong><br>
+                        <small>R$ ${item.preco.toFixed(2)}</small>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <button class="botao-quantidade" onclick="mudarQuantidade(${item.id}, -1)">−</button>
+                        <span class="quantidade-valor">${item.quantidade}</span>
+                        <button class="botao-quantidade" onclick="mudarQuantidade(${item.id}, 1)">+</button>
+                        <button class="btn btn-danger" onclick="removerDoCarrinho(${item.id})">🗑</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            
+            totalElemento.textContent = `Total: R$ ${total.toFixed(2)}`;
+        }
+
+        function mudarQuantidade(itemId, delta) {
+            const item = carrinho.find(i => i.id === itemId);
+            if (item) {
+                item.quantidade += delta;
+                if (item.quantidade <= 0) {
+                    removerDoCarrinho(itemId);
+                    return;
+                }
+                localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                renderizarCarrinho();
+            }
+        }
+
+        function removerDoCarrinho(itemId) {
+            carrinho = carrinho.filter(i => i.id !== itemId);
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            renderizarCarrinho();
+            atualizarNavegacao();
+        }
+
+        // ========== FINALIZAR COMPRA ==========
+        function finalizarCompra() {
+            if (carrinho.length === 0) {
+                alert('Carrinho vazio!');
+                return;
+            }
+            
+            const total = carrinho.reduce((acc, item) => acc + item.preco * item.quantidade, 0);
+            
+            const pedido = {
+                numero: '#SP-' + Date.now(),
+                itens: [...carrinho],
+                total: total,
+                data: new Date().toISOString(),
+                usuario: usuarioLogado.nome
+            };
+            
+            pedidos.push(pedido);
+            localStorage.setItem('pedidos', JSON.stringify(pedidos));
+            
+            carrinho = [];
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            
+            alert('Compra realizada com sucesso!');
+            atualizarNavegacao();
+            mostrarTela('pedidos');
+        }
+
+        // ========== PEDIDOS ==========
+        function renderizarPedidos() {
+            const container = document.getElementById('listaPedidos');
+            
+            if (pedidos.length === 0) {
+                container.innerHTML = '<p class="text-center" style="color:#a1a1a1;">Nenhum pedido</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            pedidos.forEach(pedido => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <strong>${pedido.numero}</strong><br>
+                    <small>${new Date(pedido.data).toLocaleDateString('pt-BR')}</small><br>
+                    <small>${pedido.itens.length} item(ns)</small><br>
+                    <strong style="color:#f59e0b;">R$ ${pedido.total.toFixed(2)}</strong>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ========== INICIALIZAR ==========
+        atualizarNavegacao();
+        mostrarTela(usuarioLogado ? 'catalogo' : 'login');
+    </script>
+</body>
+</html>
