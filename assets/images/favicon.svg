@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <!-- Fundo preto arredondado -->
+    <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+    
+    <!-- Círculo de destaque -->
+    <circle cx="32" cy="32" r="20" fill="#111111" stroke="#f59e0b" stroke-width="2.5"/>
+    
+    <!-- Triângulo de play -->
+    <polygon points="27,22 27,42 43,32" fill="#ffffff"/>
+</svg>
